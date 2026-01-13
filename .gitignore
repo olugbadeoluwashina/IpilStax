@@ -1,0 +1,48 @@
+# --------------------
+# Deno
+# --------------------
+/.deno
+/coverage
+/deno.lock
+
+# --------------------
+# Environment variables
+# --------------------
+.env
+.env.*
+!.env.example
+
+# --------------------
+# Logs
+# --------------------
+*.log
+
+# --------------------
+# OS files
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# Editor / IDE
+# --------------------
+.vscode/
+.idea/
+
+# --------------------
+# Database
+# --------------------
+*.sqlite
+*.db
+postgres-data/
+
+# --------------------
+# Test artifacts
+# --------------------
+/test-results
+/playwright-report
+
+# --------------------
+# Build / dist (if any)
+# --------------------
+/dist

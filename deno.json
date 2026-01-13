@@ -1,0 +1,22 @@
+{
+  "name": "@ipinstaq/backend",
+  "version": "0.1.0",
+  "exports": "./main.ts",
+  "tasks": {
+    "dev": "deno run --watch -R main.ts"
+  },
+  "imports": {
+    "@ipinstaq/core/": "./src/core/",
+    "@ipinstaq/infra/": "./src/infra/",
+    "@ipinstaq/shared/": "./src/shared/",
+
+    "kysely": "npm:kysely@^0.27.0",
+    "postgres": "npm:postgres@^3.4.4",
+    
+    "@std/assert": "jsr:@std/assert"
+  },
+
+  "compilerOptions": {
+    "importsNotUsedAsValues": "error"
+  }
+}
