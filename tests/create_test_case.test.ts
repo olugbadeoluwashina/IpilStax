@@ -1,13 +1,13 @@
 import { assertEquals, assertExists } from "@std/assert";
-import { TestCase } from "@ipinstaq/core/schema/test_case.ts";
-import { ITestCaseRepository } from "@ipinstaq/core/logic/test_case/test_case_repo.ts";
+import type { TestCase } from "@ipinstaq/core/schema/test_case.ts";
+import type { ITestCaseRepository } from "@ipinstaq/core/logic/test_case/test_case_repo.ts";
 import { CreateTestCaseUC } from "@ipinstaq/core/logic/test_case/create_test_case.ts";
 
 /**
  * This is a Mock Repository. 
  * It stays in RAM and never touches the disk.
  */
-class MockTestCaseRepository implements ITestCaseRepository {
+export class MockTestCaseRepository implements ITestCaseRepository {
   public testCases: TestCase[] = [];
 
   async save(testCase: TestCase) {
@@ -30,7 +30,7 @@ Deno.test("CreateTestCaseUseCase: should successfully create a new test case", a
   
   const inputData = {
     title: "Verify User Login",
-    body: "1. Enter credentials, 2. Click login",
+    description: "1. Enter credentials, 2. Click login",
     expectedResult: "User is redirected to dashboard",
     status: "draft" as const,
   };

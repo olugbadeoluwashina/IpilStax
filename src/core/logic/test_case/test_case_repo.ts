@@ -1,4 +1,4 @@
-import type { TestCase, TestCaseId } from "@ipinstaq/core/schema/test_case.ts";
+import type { TestCase } from "@ipinstaq/core/schema/test_case.ts";
 
 /**
  * This is an interface (a contract).
@@ -6,7 +6,7 @@ import type { TestCase, TestCaseId } from "@ipinstaq/core/schema/test_case.ts";
  * but you must provide these methods."
  */
 export interface ITestCaseRepository {
-  getById(id: TestCaseId): Promise<TestCase | null>;
+  getById(id: string): Promise<TestCase | null>;
   save(testCase: TestCase): Promise<void>;
   listAll(): Promise<TestCase[]>;
 }

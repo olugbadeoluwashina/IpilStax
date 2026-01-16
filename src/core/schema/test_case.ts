@@ -1,11 +1,17 @@
-export type TestCaseId = string;
+import { z } from "zod";
 
-export interface TestCase {
-  id: TestCaseId;
-  title: string;
-  body: string;
-  expectedResult: string;
-  status: 'active' | 'draft' | 'archived';
-  version: number;
-  createdAt: Date;
-}
+/**
+ * We define the "Source of Truth" for what a Test Case IS.
+ */
+export const TestCaseSchema = z.object({
+  id: z.uuid().optional(),
+  title: z.string().min(5).max(100),
+  description: z.string().min(10),
+  expectedResult: z.string(),
+  status: z.enum(["draft", "active", "archived"]),
+  version: z.number().int().positive().optional(),
+  createdAt: z.date().optional(),
+});
+
+// Instead of writing the interface manually, we infer it from the schema!
+export type TestCase = z.infer<typeof TestCaseSchema>;

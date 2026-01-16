@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "exports": "./main.ts",
   "tasks": {
-    "dev": "deno run --watch -R main.ts"
+    "dev": "deno run --watch -A main.ts"
   },
   "imports": {
     "@ipinstaq/core/": "./src/core/",
@@ -11,12 +11,21 @@
     "@ipinstaq/shared/": "./src/shared/",
 
     "kysely": "npm:kysely@^0.27.0",
-    "postgres": "npm:postgres@^3.4.4",
+    "postgres": "npm:postgres@^3.4.8",
+    "zod": "npm:zod@^4.3.5",
     
     "@std/assert": "jsr:@std/assert"
+    
   },
 
-  "compilerOptions": {
-    "importsNotUsedAsValues": "error"
+  "lint": {
+    "exclude": ["src/tests/"]
+  },
+
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": true
   }
 }
