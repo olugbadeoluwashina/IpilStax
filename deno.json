@@ -15,7 +15,7 @@
     "pg": "npm:pg@^8.17.1",
     "pg-pool": "npm:pg-pool@^3.11.0",
     "zod": "npm:zod@^4.3.5",
-    
+
     "@std/assert": "jsr:@std/assert"
   },
 

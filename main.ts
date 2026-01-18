@@ -9,14 +9,12 @@ import { db } from '@ipinstaq/infra/persistence/connection.ts';
 // Initialize our "Memory"
 const testCaseRepo = new TestCaseRepository(db);
 
-console.log("Ipinstaq Gateway starting on http://localhost:8000");
+console.log('Ipinstaq Gateway starting on http://localhost:8000');
 
 Deno.serve(async (req: Request) => {
-
   return await loggerMiddleware(req, async () => {
-    return await errorMiddleware(req, async() => {
-
-      return await router(req, testCaseRepo)
+    return await errorMiddleware(req, async () => {
+      return await router(req, testCaseRepo);
     });
   });
 });

@@ -1,10 +1,10 @@
-import { assertEquals, assertExists } from "@std/assert";
-import type { TestCase } from "@ipinstaq/core/schema/test_case.ts";
-import type { ITestCaseRepository } from "@ipinstaq/core/logic/test_case/test_case_repo.ts";
-import { CreateTestCaseUC } from "@ipinstaq/core/logic/test_case/create_test_case.ts";
+import { assertEquals, assertExists } from '@std/assert';
+import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
+import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
+import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
 
 /**
- * This is a Mock Repository. 
+ * This is a Mock Repository.
  * It stays in RAM and never touches the disk.
  */
 export class MockTestCaseRepository implements ITestCaseRepository {
@@ -23,16 +23,16 @@ export class MockTestCaseRepository implements ITestCaseRepository {
   }
 }
 
-Deno.test("CreateTestCaseUseCase: should successfully create a new test case", async () => {
+Deno.test('CreateTestCaseUseCase: should successfully create a new test case', async () => {
   // 1. Setup (Arrange)
   const mockRepo = new MockTestCaseRepository();
   const useCase = new CreateTestCaseUC(mockRepo);
-  
+
   const inputData = {
-    title: "Verify User Login",
-    description: "1. Enter credentials, 2. Click login",
-    expectedResult: "User is redirected to dashboard",
-    status: "draft" as const,
+    title: 'Verify User Login',
+    description: '1. Enter credentials, 2. Click login',
+    expectedResult: 'User is redirected to dashboard',
+    status: 'draft' as const,
   };
 
   // 2. Execute (Act)
@@ -45,4 +45,3 @@ Deno.test("CreateTestCaseUseCase: should successfully create a new test case", a
   assertEquals(mockRepo.testCases.length, 1); // Verify it was "saved" to our mock
   assertEquals(mockRepo.testCases[0].id, result.id);
 });
-

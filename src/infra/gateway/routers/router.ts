@@ -10,10 +10,10 @@ async function router(req: Request, repo: ITestCaseRepository): Promise<Response
   const method = req.method;
 
   // Simple Routing Logic
-    if (method === "POST" && pathname === "/test-cases") {
-      return await validate(TestCaseSchema)(req, async (data) => {
-        return await createTestCaseHandler(data, repo);
-      });
+  if (method === 'POST' && pathname === '/test-cases') {
+    return await validate(TestCaseSchema)(req, async (data) => {
+      return await createTestCaseHandler(data, repo);
+    });
   }
 
   // 404 Fallback
