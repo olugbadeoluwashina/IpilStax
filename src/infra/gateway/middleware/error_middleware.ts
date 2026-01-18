@@ -26,6 +26,7 @@ export async function errorMiddleware(_req: Request, next: () => Promise<Respons
     //   }, { status: dbError.status });
     // } 
     else {
+      console.log(err)
       return Response.json({ 
         error: "InternalServerError",
         message: "An unexpected error occurred",

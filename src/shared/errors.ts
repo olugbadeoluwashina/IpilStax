@@ -1,4 +1,4 @@
-import type {PostgresError} from 'postgres';
+import type {PostgresError} from '@db/postgres';
 import type z from 'zod';
 
 type ZodErrorDetails = z.ZodFlattenedError<z.ZodError>;
@@ -27,7 +27,7 @@ class ValidationError extends AppError<ZodErrorDetails> {
 
 class DatabaseError extends AppError<PostgresError> {
   constructor(detail: PostgresError) {
-    const field = DatabaseError.extractFieldFromPostgresError(detail.data);
+    const field = DatabaseError.extractFieldFromPostgresError(detail.fields?.detail);
     // If the error is related to a unique constraint violation, we can extract the field name
     // from the detail message.
     const message = field

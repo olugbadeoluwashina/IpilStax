@@ -3,19 +3,20 @@
   "version": "0.1.0",
   "exports": "./main.ts",
   "tasks": {
-    "dev": "deno run --watch -A main.ts"
+    "dev": "deno run --watch --allow-env --allow-net --allow-read --env-file=.env main.ts"
   },
   "imports": {
+    "@db/postgres": "jsr:@db/postgres@^0.19.5",
     "@ipinstaq/core/": "./src/core/",
     "@ipinstaq/infra/": "./src/infra/",
     "@ipinstaq/shared/": "./src/shared/",
 
-    "kysely": "npm:kysely@^0.27.0",
-    "postgres": "npm:postgres@^3.4.8",
+    "kysely": "npm:kysely@^0.28.10",
+    "pg": "npm:pg@^8.17.1",
+    "pg-pool": "npm:pg-pool@^3.11.0",
     "zod": "npm:zod@^4.3.5",
     
     "@std/assert": "jsr:@std/assert"
-    
   },
 
   "lint": {
