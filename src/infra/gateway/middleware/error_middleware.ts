@@ -1,19 +1,35 @@
-import { AppError } from '@ipinstaq/shared/errors.ts';
+import { AppError, DatabaseError, ValidationError } from '@ipinstaq/shared/errors.ts';
+import z from 'zod';
 //import { PostgresError } from 'postgres';
 
 export async function errorMiddleware(_req: Request, next: () => Promise<Response>) {
   try {
     return await next();
   } catch (err) {
+    if (err instanceof z.ZodError) {
+      console.log(err);
+      const validationError = new ValidationError(err);
+      return Response.json({
+        error: validationError.name,
+        message: validationError.message,
+        status: validationError.status,
+        errors: validationError.details,
+        timestamp: validationError.timeStamp,
+      }, { status: validationError.status });
+    }
+
     if (err instanceof AppError) {
+
       return Response.json({
         error: err.name,
         message: err.message,
         status: err.status,
-        errors: err.details?.fieldErrors,
+        errors: err.details,
         timestamp: err.timeStamp,
       }, { status: err.status });
-    } // } else if (err instanceof PostgresError){
+
+    }
+    // } else if (err instanceof DatabaseError) {
     //   const dbError = err.fields?.detail  ? new DatabaseError(err) : new InternalServerError("Database error occurred");
     //   return Response.json({
     //     error: dbError.name,
@@ -22,7 +38,7 @@ export async function errorMiddleware(_req: Request, next: () => Promise<Respons
     //     timestamp: dbError.timeStamp,
     //   }, { status: dbError.status });
     // }
-    else {
+    
       console.log(err);
       return Response.json({
         error: 'InternalServerError',
@@ -30,6 +46,6 @@ export async function errorMiddleware(_req: Request, next: () => Promise<Respons
         status: 500,
         timestamp: new Date().toISOString(),
       }, { status: 500 });
-    }
+    
   }
 }

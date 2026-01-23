@@ -1,14 +1,12 @@
 import type { PostgresError } from '@db/postgres';
-import type z from 'zod';
+import z from 'zod';
 
-type ZodErrorDetails = z.ZodFlattenedError<z.ZodError>;
-
-class AppError<Type = unknown> extends Error {
+class AppError extends Error {
   status: number;
   timeStamp: string;
-  details?: Type;
+  details?: unknown;
 
-  constructor(message: string, status: number, details?: Type) {
+  constructor(message: string, status: number, details?: unknown) {
     super(message);
     this.status = status;
     this.name = this.constructor.name;
@@ -17,16 +15,15 @@ class AppError<Type = unknown> extends Error {
   }
 }
 
-class ValidationError extends AppError<ZodErrorDetails> {
-  constructor(details: ZodErrorDetails) {
-    const message = details.formErrors.length
-      ? details.formErrors.join(', ')
-      : 'Invalid input data';
-    super(message, 400, details);
+class ValidationError extends AppError {
+  constructor(error: z.ZodError) {
+    console.log("Validation Error ***********************")
+    super('Invalid input data', 400, z.flattenError(error));
   }
+
 }
 
-class DatabaseError extends AppError<PostgresError> {
+class DatabaseError extends AppError {
   constructor(detail: PostgresError) {
     const field = DatabaseError.extractFieldFromPostgresError(detail.fields?.detail);
     // If the error is related to a unique constraint violation, we can extract the field name

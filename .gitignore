@@ -46,3 +46,10 @@ postgres-data/
 # Build / dist (if any)
 # --------------------
 /dist
+
+# --------------------
+# REST API clients
+# --------------------
+.postman/
+.http
+*.rest

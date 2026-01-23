@@ -13,6 +13,7 @@ export class CreateTestCaseUC {
     });
 
     await this.repo.save(newTestCase);
+    console.log(newTestCase)
     return newTestCase;
   }
 }

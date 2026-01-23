@@ -1,23 +1,20 @@
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
-import { createTestCaseHandler } from '../controllers/test_case_handler.ts';
 import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
-import { validate } from '../middleware/validation_middleware.ts';
-import { TestCaseSchema } from '@ipinstaq/core/schema/test_case.ts';
+import { testCaseRoutes } from './test_case.router.ts';
 
-async function router(req: Request, repo: ITestCaseRepository): Promise<Response> {
+async function router(req: Request, repo: any): Promise<Response> {
   const url = new URL(req.url);
-  const pathname = url.pathname;
-  const method = req.method;
+  const segments = url.pathname.split('/').filter(Boolean);
+  const head = segments[0];
+  const tail = segments.slice(1).join('/');
 
-  // Simple Routing Logic
-  if (method === 'POST' && pathname === '/test-cases') {
-    return await validate(TestCaseSchema)(req, async (data) => {
-      return await createTestCaseHandler(data, repo);
-    });
+  switch (head) {
+    case 'test-cases':
+      return await testCaseRoutes(req, tail, repo as ITestCaseRepository);
+    default:
+      throw new NotFoundError(`Route ${req.method} ${url.pathname}`); 
   }
 
-  // 404 Fallback
-  throw new NotFoundError(`Route ${method} ${pathname}`);
 }
 
 export default router;

@@ -45,3 +45,20 @@ Deno.test('CreateTestCaseUseCase: should successfully create a new test case', a
   assertEquals(mockRepo.testCases.length, 1); // Verify it was "saved" to our mock
   assertEquals(mockRepo.testCases[0].id, result.id);
 });
+
+Deno.test('CreateTestCaseUseCase: should throw an error for invalid data', async () => {
+  // 1. Setup (Arrange)
+  const mockRepo = new MockTestCaseRepository();
+  const useCase = new CreateTestCaseUC(mockRepo);
+
+  const invalidInputData = {
+    title: 'Shrt', // Too short
+    description: 'Desc', // Too short
+    expectedResult: 'Result',
+    status: 'draft' as const,
+  };
+  // 2. Execute & Verify (Act & Assert)
+  const result = await useCase.execute(invalidInputData);
+  assertEquals(result, undefined);
+
+});
