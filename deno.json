@@ -16,7 +16,8 @@
     "pg-pool": "npm:pg-pool@^3.11.0",
     "zod": "npm:zod@^4.3.5",
 
-    "@std/assert": "jsr:@std/assert"
+    "@std/assert": "jsr:@std/assert",
+    "@std/expect": "jsr:@std/expect"
   },
 
   "lint": {
@@ -28,5 +29,8 @@
     "lineWidth": 100,
     "indentWidth": 2,
     "singleQuote": true
+  }, 
+  "test": {
+    "include": ["tests/**/*.test.ts", "tests/"]
   }
 }

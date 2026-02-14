@@ -1,13 +1,11 @@
-import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
-import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
 import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
-import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
-import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
+import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
+import { NotFoundError } from '@ipinstaq/shared/errors.ts';
+import type { AppRequest } from '../middleware/validation_middleware.ts';
 
-export async function createTestCaseHandler(data: TestCase, repo: ITestCaseRepository): Promise<Response> {
+export async function createTestCaseHandler(req: AppRequest, deps: AppDependencies): Promise<Response> {
   console.log('createTestCaseHandler');
-  const uc = new CreateTestCaseUC(repo);
-  const result = await uc.execute(data);
+  const result = await deps.createTestCaseUC.execute(req.validated as TestCase);
 
   return Response.json({
     success: true,
@@ -15,9 +13,18 @@ export async function createTestCaseHandler(data: TestCase, repo: ITestCaseRepos
   }, { status: 201 });
 }
 
-export async function getTestCaseHandler(id: string, repo: ITestCaseRepository) {
-  const uc = new GetTestCaseUC(repo);
-  const result = await uc.execute(id);
+export async function getTestCaseHandler(req: AppRequest, deps: AppDependencies) {
+
+  const id = req.validated as string;
+  if (!id) {
+    throw new NotFoundError("Missing test case id");
+  }
+
+  const result = await deps.getTestCaseUC.execute(id);
+
+  if (!result) {
+    throw new NotFoundError(`Test case with id ${id}`);
+  }
 
   return Response.json({
     success: true,
@@ -25,9 +32,8 @@ export async function getTestCaseHandler(id: string, repo: ITestCaseRepository) 
   });
 }
 
-export async function listAllTestCasesHandler(repo: ITestCaseRepository): Promise<Response> {
-  const uc = new ListAllTestCaseUC(repo);
-  const result = await uc.execute();
+export async function listAllTestCasesHandler(_req: AppRequest, deps: AppDependencies): Promise<Response> {
+  const result = await deps.listAllTestCaseUC.execute();
 
   return Response.json({
     success: true,

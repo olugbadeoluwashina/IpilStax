@@ -1,20 +1,51 @@
+import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
+import { routes } from './routes.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
-import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
-import { testCaseRoutes } from './test_case.router.ts';
 
-async function router(req: Request, repo: any): Promise<Response> {
+
+async function router(req: Request, deps: AppDependencies): Promise<Response> {
+
   const url = new URL(req.url);
-  const segments = url.pathname.split('/').filter(Boolean);
-  const head = segments[0];
-  const tail = segments.slice(1).join('/');
 
-  switch (head) {
-    case 'test-cases':
-      return await testCaseRoutes(req, tail, repo as ITestCaseRepository);
-    default:
-      throw new NotFoundError(`Route ${req.method} ${url.pathname}`); 
+  const route = routes.find((route) => {
+    if (route.method !== req.method) return false;
+      const params = matchPath(route.path, url.pathname);
+      return params !== null;
+  });
+
+  if (!route) {
+    throw new NotFoundError(`No route found for ${req.method} ${url.pathname}`);
   }
 
+  const params = matchPath(route.path, url.pathname)!;
+  const reqWithParams = Object.assign(req, { params });
+
+  return await route.handler({deps, req: reqWithParams});
+
+}
+
+function matchPath(routePath: string, requestPath: string): Record<string, string> | null {
+  const routeParts = routePath.split("/").filter(Boolean);
+  const requestParts = requestPath.split("/").filter(Boolean);
+
+  if (routeParts.length !== requestParts.length) {
+    return null;
+  }
+
+  const params: Record<string, string> = {};
+
+  for (let i = 0; i < routeParts.length; i++) {
+    const routePart = routeParts[i];
+    const requestPart = requestParts[i];
+
+    if (routePart.startsWith(":")) {
+      params[routePart.slice(1)] = requestPart;
+    } else if (routePart !== requestPart) {
+      return null;
+    }
+  }
+
+  return params;
 }
 
 export default router;

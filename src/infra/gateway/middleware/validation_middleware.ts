@@ -1,5 +1,6 @@
 import z from 'zod';
 import { ValidationError } from '@ipinstaq/shared/errors.ts';
+import type { AppHandler, RouteHandler } from '../routers/routing_types.ts';
 
 // Define the structure of the request to be validated - contract enforcement
 export const RequestValidationSchema = z.object({
@@ -8,17 +9,28 @@ export const RequestValidationSchema = z.object({
   query: z.record(z.string(), z.any()).optional(),
 });
 
+export type AppRequest = Request & {
+  params?: Record<string, string>;
+  body?: unknown;
+  query?: Record<string, string>;
+  validated?: unknown;
+}
+
 export type ValidatedRequest = z.infer<typeof RequestValidationSchema>;
 
 
-export function validate<T extends z.ZodType>(schema: T) {
+function validate<T extends z.ZodType>(
+  schema: T, 
+  select: (req: ValidatedRequest) => unknown
+) {
   
   return async function (
-    req: Request & { params?: Record<string, string> },
-    next: (data: z.infer<T>) => Promise<Response>
+    req: AppRequest,
+    next: () => Promise<Response>
   ) {
     const url = new URL(req.url);
 
+    //Normalize input for validation
     const input: ValidatedRequest = {
       body: req.headers.get("content-type")?.includes("application/json")
         ? await req.json() : undefined,
@@ -35,12 +47,32 @@ export function validate<T extends z.ZodType>(schema: T) {
     }
 
     // 🎯 ACTUAL VALIDATION
-    const result = schema.safeParse(contractResult.data);
+    const selected = select(contractResult.data);
+    const result = schema.safeParse(selected);
     console.log("Validation result:", result);
     if (!result.success) {
       throw new ValidationError(result.error);
     }
 
-    return await next(result.data);
+    req.validated = result.data;
+    return await next();
   };
+}
+
+export function withValidation<T>(
+  schema: z.ZodType<T>, 
+  select: (req: ValidatedRequest) => unknown, 
+  handler: AppHandler): RouteHandler {
+
+  return async ({deps, req}): Promise<Response> => {
+    return await validate(schema, select)(req, async () => {
+      return await handler(req, deps);
+    });
+  }
+}
+
+export function withoutValidation(handler: AppHandler): RouteHandler {
+  return ({deps, req}): Promise<Response> => {
+    return handler(req, deps);
+  }
 }

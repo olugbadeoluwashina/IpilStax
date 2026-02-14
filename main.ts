@@ -2,19 +2,17 @@
 import { loggerMiddleware } from '@ipinstaq/infra/gateway/middleware/logger_middleware.ts';
 import { errorMiddleware } from '@ipinstaq/infra/gateway/middleware/error_middleware.ts';
 import router from '@ipinstaq/infra/gateway/routers/router.ts';
-import { TestCaseRepository } from '@ipinstaq/infra/persistence/test_case.repository.ts';
-import { db } from '@ipinstaq/infra/persistence/connection.ts';
-// import { validate } from '@ipinstaq/infra/gateway/validation_middleware.ts';
+import { defineDependencies } from '@ipinstaq/shared/types/deps.ts';
 
-// Initialize our "Memory"
-const testCaseRepo = new TestCaseRepository(db);
+// configure dependencies
+const deps = defineDependencies();
 
 console.log('Ipinstaq Gateway starting on http://localhost:8000');
 
 Deno.serve(async (req: Request) => {
   return await loggerMiddleware(req, async () => {
     return await errorMiddleware(req, async () => {
-      return await router(req, testCaseRepo);
+      return await router(req, deps);
     });
   });
 });
