@@ -5,7 +5,7 @@ import { getTestCaseHandler } from '@ipinstaq/infra/gateway/controllers/test_cas
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '@ipinstaq/infra/gateway/middleware/validation_middleware.ts';
 
-Deno.test("handler returns 404 when test case is found", async () => {
+Deno.test("handler returns 404 when test case is found", () => {
 
   const req = {validated: '124'} as AppRequest;
 

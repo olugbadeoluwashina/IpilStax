@@ -64,24 +64,27 @@ Deno.test("ListAllTestCaseUC should list all test cases", async (test) => {
   await test.step("should return all test cases when they exist", async () => {
 
   // Seed with some test cases
-  await repo.save({
-    title: 'Test Case 1',
-    description: 'Description 1',
-    expectedResult: 'Expected Result 1',
-    status: 'draft' as const,
-  });
-  await repo.save({
-    title: 'Test Case 2',
-    description: 'Description 2',
-    expectedResult: 'Expected Result 2',
-    status: 'draft' as const,
-  });
+  repo.listAll = () => Promise.resolve([
+    {
+      id: 'id-1',
+      title: 'Test Case 1',
+      description: 'Description 1',
+      expectedResult: 'Expected Result 1',
+      status: 'active' as const,
+    },
+    {
+      id: 'id-2',
+      title: 'Test Case 2',
+      description: 'Description 2',
+      expectedResult: 'Expected Result 2',
+      status: 'draft' as const,
+    },
+  ]);
 
   const listUseCase = new ListAllTestCaseUC(repo);
   const allTestCases = await listUseCase.execute();
-  const repoTestCases = await repo.listAll();
 
-  expect(allTestCases.length).toBe(repoTestCases.length);
+  expect(allTestCases.length).toBe(2);
   });
 
 });
