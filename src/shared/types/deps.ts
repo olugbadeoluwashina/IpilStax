@@ -3,8 +3,8 @@ import { createTestCaseRepository } from '@ipinstaq/infra/persistence/connection
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
-import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
 import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
+import type { TestCase } from './types.ts';
 
 export interface AppDependencies {
   testCaseRepo: ITestCaseRepository;

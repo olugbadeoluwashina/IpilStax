@@ -1,19 +1,29 @@
 import { z } from 'zod';
-import { TestCaseStatusSchema } from '@ipinstaq/shared/types/types.ts';
-import { up } from '@ipinstaq/infra/persistence/migrations/intial_schema_1.ts';
 /**
  * We define the "Source of Truth" for what a Test Case IS.
  */
-export const TestCaseSchema = z.object({
-  id: z.uuid("The provided ID is not a valid UUID format").optional(),
-  title: z.string().min(5).max(100),
-  description: z.string().min(10),
-  expectedResult: z.string(),
-  status: TestCaseStatusSchema,
-  version: z.number().int().positive().optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+// 1. The core logic - What is absolutely required to define a Test Case
+export const TestCaseStatusSchema = z.enum({
+  draft: 'draft',
+  active: 'active',
+  archived: 'archived',
 });
 
-// Instead of writing the interface manually, we infer it from the schema!
-export type TestCase = z.infer<typeof TestCaseSchema>;
+const BaseTestCaseSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters").max(100),
+  description: z.string().min(10, "Description is too short"),
+  expectedResult: z.string().min(1, "Expected result is required"),
+  status: TestCaseStatusSchema,
+});
+
+// 2. Schema for CREATING a Test Case (No IDs allowed from the user)
+export const CreateTestCaseSchema = BaseTestCaseSchema;
+
+// 3. Schema for the DOMAIN / DATABASE (Includes the metadata)
+export const TestCaseSchema = BaseTestCaseSchema.extend({
+  id: z.uuid(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  version: z.number().int().positive().default(1),
+});
+

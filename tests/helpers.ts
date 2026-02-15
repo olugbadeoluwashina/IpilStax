@@ -1,5 +1,5 @@
 import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
-import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
+import type { TestCase, UpdateTestCaseInput } from '@ipinstaq/shared/types/types.ts';
 
 /**
  * This is a Mock Repository.
@@ -21,7 +21,7 @@ export class MockTestCaseRepository implements ITestCaseRepository {
     return this.testCases;
   }
 
-  async edit(updates: Partial<TestCase>): Promise<TestCase | null> {
+  async edit(updates: UpdateTestCaseInput): Promise<TestCase | null> {
     const index = this.testCases.findIndex((tc) => tc.id === updates.id);
     if (index === -1) {
       return null;
@@ -37,6 +37,20 @@ export function fakeTestCaseRepo(): ITestCaseRepository {
   return new MockTestCaseRepository();
 }
 
+
+export function createTestCaseFactory(overrides?: Partial<TestCase>): TestCase {
+  return {
+    id: 'test-case-id',
+    title: 'Test Case Title',
+    description: 'Test Case Description',
+    expectedResult: 'Expected Result',
+    status: 'draft',
+    version: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    ...overrides,
+  };
+}
 
 // function silentLogger(): AppDependencies['logger'] {
 //     return {

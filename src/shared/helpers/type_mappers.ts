@@ -1,4 +1,4 @@
-import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
+import type { TestCase } from '@ipinstaq/shared/types/types.ts';
 import type { ATestCase } from '../types/types.ts';
 
 export function toTestCase(row: ATestCase ): TestCase {
@@ -10,6 +10,6 @@ export function toTestCase(row: ATestCase ): TestCase {
     status: row.status,
     version: row.version,
     createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    updatedAt: row.updated_at
   };
 }

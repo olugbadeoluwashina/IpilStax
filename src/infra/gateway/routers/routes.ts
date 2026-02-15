@@ -2,7 +2,7 @@
 import { createTestCaseHandler, editTestCaseHandler, getTestCaseHandler, listAllTestCasesHandler } from '../controllers/test_case_handler.ts';
 import { withoutValidation, withValidation } from '../middleware/validation_middleware.ts';
 import type { RouteDefinition } from './routing_types.ts';
-import { TestCaseSchema } from '@ipinstaq/core/schema/test_case.ts';
+import { CreateTestCaseSchema, TestCaseSchema } from '@ipinstaq/core/schema/test_case.ts';
 import z from 'zod';
 
 
@@ -10,7 +10,7 @@ export const routes: RouteDefinition[] = [
   {
     method: "POST",
     path: "/testCases",
-    handler: withValidation(TestCaseSchema, (req) => req.body, createTestCaseHandler)
+    handler: withValidation(CreateTestCaseSchema, (req) => req.body, createTestCaseHandler)
   },
   {
     method: "GET",

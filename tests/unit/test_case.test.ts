@@ -1,7 +1,7 @@
 import { assertEquals, assertExists } from '@std/assert';
 import { expect } from '@std/expect'
 import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
-import { fakeTestCaseRepo } from '../helpers.ts';
+import { createTestCaseFactory, fakeTestCaseRepo } from '../helpers.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
 import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
@@ -30,13 +30,12 @@ Deno.test('GetTestCaseUseCase: should get test case by id after creation', async
   const repo = fakeTestCaseRepo();
 
   await test.step('can retrieve existing test case', async () => {
-    await repo.save({
+
+
+    await repo.save(createTestCaseFactory({
       id: 'existing-id-123',
-      title: 'Verify User Logout',
-      description: '1. Click logout button',
-      expectedResult: 'User is redirected to login page',
-      status: 'draft' as const,
-    });
+      title: 'Verify User Logout'
+    }));
 
     const getUseCase = new GetTestCaseUC(repo);
     const retrievedTestCase = await getUseCase.execute('existing-id-123');
@@ -66,20 +65,14 @@ Deno.test("ListAllTestCaseUC should list all test cases", async (test) => {
 
   // Seed with some test cases
   repo.listAll = () => Promise.resolve([
-    {
+    createTestCaseFactory({
       id: 'id-1',
       title: 'Test Case 1',
-      description: 'Description 1',
-      expectedResult: 'Expected Result 1',
-      status: 'active' as const,
-    },
-    {
+    }),
+    createTestCaseFactory({
       id: 'id-2',
       title: 'Test Case 2',
-      description: 'Description 2',
-      expectedResult: 'Expected Result 2',
-      status: 'draft' as const,
-    },
+    }),
   ]);
 
   const listUseCase = new ListAllTestCaseUC(repo);
@@ -95,13 +88,10 @@ Deno.test("EditTestCaseUC should edit existing test case", async () => {
   const repo = fakeTestCaseRepo();
 
   // Seed with a test case
-  await repo.save({
+  await repo.save(createTestCaseFactory({
     id: 'id-to-edit',
     title: 'Original Title',
-    description: 'Original Description',
-    expectedResult: 'Original Expected Result',
-    status: 'draft' as const,
-  });
+  }));
 
   const editUseCase = new EditTestCaseUC(repo);
 

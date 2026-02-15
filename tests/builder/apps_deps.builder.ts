@@ -1,6 +1,6 @@
 import type { AppDependencies, GetTestCaseUCContract } from '@ipinstaq/shared/types/deps.ts';
 import { fakeTestCaseRepo } from '../helpers.ts';
-import { TestCase } from '@ipinstaq/core/schema/test_case.ts';
+import { TestCase } from '@ipinstaq/shared/types/types.ts';
 
 export class TestDepsBuilder {
 

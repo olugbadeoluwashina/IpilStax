@@ -1,4 +1,4 @@
-import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
+import type { TestCase } from '@ipinstaq/shared/types/types.ts';
 import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '../middleware/validation_middleware.ts';
