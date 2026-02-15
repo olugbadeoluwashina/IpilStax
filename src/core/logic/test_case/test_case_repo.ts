@@ -1,5 +1,4 @@
 import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
-import { UpdateTestCase } from '@ipinstaq/shared/types/types.ts';
 
 /**
  * This is an interface (a contract).

@@ -27,7 +27,8 @@ export class MockTestCaseRepository implements ITestCaseRepository {
       return null;
     }
 
-    this.testCases[index] = { ...this.testCases[index], ...updates };
+    this.testCases[index] = { ...this.testCases[index], ...updates, 
+      version: (this.testCases[index].version || 1) + 1, updatedAt: new Date() };
     return this.testCases[index];
   }
 }

@@ -4,6 +4,7 @@ import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_cas
 import { fakeTestCaseRepo } from '../helpers.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
+import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
 
 
 Deno.test('CreateTestCaseUseCase: should successfully create a new test case', async () => {
@@ -88,3 +89,32 @@ Deno.test("ListAllTestCaseUC should list all test cases", async (test) => {
   });
 
 });
+
+Deno.test("EditTestCaseUC should edit existing test case", async () => {
+
+  const repo = fakeTestCaseRepo();
+
+  // Seed with a test case
+  await repo.save({
+    id: 'id-to-edit',
+    title: 'Original Title',
+    description: 'Original Description',
+    expectedResult: 'Original Expected Result',
+    status: 'draft' as const,
+  });
+
+  const editUseCase = new EditTestCaseUC(repo);
+
+  const updates = {
+    id: 'id-to-edit',
+    title: 'Updated Title'
+  };
+
+  const updatedTestCase = await editUseCase.execute(updates);
+
+  expect(updatedTestCase).toBeDefined();
+  expect(updatedTestCase?.title).toBe(updates.title);
+  expect(updatedTestCase?.version).toBe(2);
+});
+
+

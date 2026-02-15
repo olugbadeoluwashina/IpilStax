@@ -2,7 +2,7 @@ import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
 import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '../middleware/validation_middleware.ts';
-import { UpdateTestCaseInput } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
+import type { UpdateTestCaseInput } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
 
 export async function createTestCaseHandler(req: AppRequest, deps: AppDependencies): Promise<Response> {
   const result = await deps.createTestCaseUC.execute(req.validated as TestCase);

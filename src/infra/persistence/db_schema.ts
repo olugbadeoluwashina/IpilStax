@@ -10,7 +10,7 @@ export interface TestCasesTable {
   version: Generated<number>;
   // Generated<T> tells Kysely that the DB handles this value automatically
   created_at: Generated<Date>;
-  updated_at?: Date;
+  updated_at?: Generated<Date>;
 }
 
 export interface Database {

@@ -25,9 +25,7 @@ export const routes: RouteDefinition[] = [
   {
     method: "PATCH",
     path: "/testCases/:id",
-    handler: withValidation(z.object({
-        id: z.uuid(), ...TestCaseSchema.omit({ id: true }).partial().shape,
-    }), (req) => ({ id: req.params?.id, ...req.body }), editTestCaseHandler)
+    handler: withValidation(TestCaseSchema.partial(), (req) => ({id: req.params?.id, ...req.body}), editTestCaseHandler)
   }
 
 ];
