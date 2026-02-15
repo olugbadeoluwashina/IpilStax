@@ -1,5 +1,5 @@
 import { type Kysely, sql } from "kysely";
-import { Database } from '../db_schema.ts';
+import type { Database } from '../db_schema.ts';
 
 export async function up(db: Kysely<Database>): Promise<void> {
   // We use .schema to build the structure
