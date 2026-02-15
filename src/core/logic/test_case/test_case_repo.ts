@@ -1,4 +1,5 @@
 import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
+import { UpdateTestCase } from '@ipinstaq/shared/types/types.ts';
 
 /**
  * This is an interface (a contract).
@@ -9,4 +10,9 @@ export interface ITestCaseRepository {
   getById(id: string): Promise<TestCase | null>;
   save(testCase: TestCase): Promise<void>;
   listAll(): Promise<TestCase[]>;
+  edit(updates: UpdateTestCaseInput): Promise<TestCase | null>;
 }
+
+type MutableFields = Pick< TestCase, "title" | "description" | "expectedResult" | "status">;
+
+export type UpdateTestCaseInput =  { id: string} & Partial<MutableFields>;

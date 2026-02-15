@@ -20,7 +20,11 @@ export class TestDepsBuilder {
       },
       listAllTestCaseUC: {
         execute: () => Promise.resolve([])
-      },  
+      },
+        editTestCaseUC: {
+        execute: async (updates) => {
+          throw new Error("editTestCaseUC.execute not implemented in TestDepsBuilder"); }
+      },
     };
 
   }

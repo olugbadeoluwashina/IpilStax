@@ -20,6 +20,16 @@ export class MockTestCaseRepository implements ITestCaseRepository {
   async listAll(): Promise<TestCase[]> {
     return this.testCases;
   }
+
+  async edit(updates: Partial<TestCase>): Promise<TestCase | null> {
+    const index = this.testCases.findIndex((tc) => tc.id === updates.id);
+    if (index === -1) {
+      return null;
+    }
+
+    this.testCases[index] = { ...this.testCases[index], ...updates };
+    return this.testCases[index];
+  }
 }
 
 export function fakeTestCaseRepo(): ITestCaseRepository {

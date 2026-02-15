@@ -48,6 +48,7 @@ function validate<T extends z.ZodType>(
 
     // 🎯 ACTUAL VALIDATION
     const selected = select(contractResult.data);
+    console.log("Validated Request:", selected);
     const result = schema.safeParse(selected);
     console.log("Validation result:", result);
     if (!result.success) {

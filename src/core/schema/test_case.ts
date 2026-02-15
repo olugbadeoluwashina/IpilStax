@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TestCaseStatusSchema } from '@ipinstaq/shared/types/types.ts';
+import { up } from '@ipinstaq/infra/persistence/migrations/intial_schema_1.ts';
 /**
  * We define the "Source of Truth" for what a Test Case IS.
  */
@@ -11,6 +12,7 @@ export const TestCaseSchema = z.object({
   status: TestCaseStatusSchema,
   version: z.number().int().positive().optional(),
   createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Instead of writing the interface manually, we infer it from the schema!

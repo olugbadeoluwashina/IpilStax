@@ -1,9 +1,9 @@
-import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
+import type { ITestCaseRepository, UpdateTestCaseInput } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
 import type { TestCase } from '@ipinstaq/core/schema/test_case.ts';
 
-import type { Kysely } from 'kysely';
+import { sql, type Kysely } from 'kysely';
 import type { Database } from './db_schema.ts';
-import type { ATestCase, NewTestCase } from '@ipinstaq/shared/types/types.ts';
+import type { ATestCase, NewTestCase, UpdateTestCase } from '@ipinstaq/shared/types/types.ts';
 
 export class TestCaseRepository implements ITestCaseRepository {
   constructor(private db: Kysely<Database>) {}
@@ -50,5 +50,23 @@ export class TestCaseRepository implements ITestCaseRepository {
       version: row.version,
       createdAt: row.created_at,
     }));
+  }
+
+  async edit(updates: UpdateTestCase): Promise<TestCase | null> {
+    const { id, ...updateData } = updates;
+    
+    const rows =
+      await this.db.updateTable("test_cases").set({...updateData, version: sql`version + 1`, updated_at: sql`now()`})
+      .where("id", "=", id! ).returningAll().executeTakeFirst();
+
+    return rows ? {
+      id: rows.id,
+      title: rows.title,
+      description: rows.body,
+      expectedResult: rows.expected_result,
+      status: rows.status,
+      version: rows.version,
+      createdAt: rows.created_at,
+    } : null;
   }
 }

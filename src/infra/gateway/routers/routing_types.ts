@@ -1,7 +1,7 @@
 import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import type { AppRequest } from '../middleware/validation_middleware.ts';
 
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export type RouteHandler = (data: {deps: AppDependencies, req: AppRequest}) => Promise<Response>;
 // Business handlers
