@@ -12,7 +12,7 @@ export const TestCaseStatusSchema = z.enum({
 const BaseTestCaseSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(100),
   description: z.string().min(10, "Description is too short"),
-  expectedResult: z.string().min(1, "Expected result is required"),
+  expectedResult: z.string().min(10, "Expected result is required"),
   status: TestCaseStatusSchema,
 });
 

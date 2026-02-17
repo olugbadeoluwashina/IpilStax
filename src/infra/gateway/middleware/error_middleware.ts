@@ -1,4 +1,4 @@
-import { AppError, DatabaseError, ValidationError } from '@ipinstaq/shared/errors.ts';
+import { AppError, DatabaseError, InternalServerError, ValidationError } from '@ipinstaq/shared/errors.ts';
 import z from 'zod';
 //import { PostgresError } from 'postgres';
 
@@ -28,16 +28,15 @@ export async function errorMiddleware(_req: Request, next: () => Promise<Respons
         timestamp: err.timeStamp,
       }, { status: err.status });
 
-    }
-    // } else if (err instanceof DatabaseError) {
-    //   const dbError = err.fields?.detail  ? new DatabaseError(err) : new InternalServerError("Database error occurred");
+     } else if (err instanceof DatabaseError) {
+    //   const dbError = err.details  ? new DatabaseError() : new InternalServerError("Database error occurred");
     //   return Response.json({
     //     error: dbError.name,
     //     message: dbError.message,
     //     status: dbError.status,
     //     timestamp: dbError.timeStamp,
     //   }, { status: dbError.status });
-    // }
+    }
     
       console.log(err);
       return Response.json({
