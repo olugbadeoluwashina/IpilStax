@@ -1,7 +1,7 @@
 import { assertEquals, assertExists } from '@std/assert';
 import { expect } from '@std/expect'
 import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
-import { createTestCaseFactory, fakeTestCaseRepo } from '../helpers.ts';
+import { createTestCaseFactory, fakeTestCaseRepo } from './helpers.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
 import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';

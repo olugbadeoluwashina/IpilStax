@@ -22,6 +22,7 @@ export const CreateTestCaseSchema = BaseTestCaseSchema;
 // 3. Schema for the DOMAIN / DATABASE (Includes the metadata)
 export const TestCaseSchema = BaseTestCaseSchema.extend({
   id: z.uuid(),
+  testCaseId: z.string().min(1, "Test Case ID is required").max(100),
   createdAt: z.date(),
   updatedAt: z.date(),
   version: z.number().int().positive().default(1),

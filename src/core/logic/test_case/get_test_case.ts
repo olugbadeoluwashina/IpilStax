@@ -1,4 +1,4 @@
-import type { TestCase } from '../../schema/test_case.ts';
+import type { TestCase } from '@ipinstaq/shared/types/types.ts';
 import type { ITestCaseRepository } from './test_case_repo.ts';
 
 export class GetTestCaseUC {

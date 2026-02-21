@@ -4,6 +4,7 @@ import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { getTestCaseHandler } from '@ipinstaq/infra/gateway/controllers/test_case_handler.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '@ipinstaq/infra/gateway/middleware/validation_middleware.ts';
+import { createTestCaseFactory } from './helpers.ts';
 
 Deno.test("handler throws error when test case is not found", () => {
 
@@ -22,9 +23,7 @@ Deno.test("handler throws error when test case is not found", () => {
 Deno.test("handler returns test case when found", async () => {
   const deps: AppDependencies = new TestDepsBuilder()
     .withGetTestCaseUC({
-      execute: () => Promise.resolve({id: "123", title: "Test Case 123", description: "A test case for testing", expectedResult: "Should work"
-        , status: "active"
-      })
+      execute: () => Promise.resolve(createTestCaseFactory({id: "123", title: "Test Case 123"}))
     })
     .build();
 

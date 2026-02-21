@@ -6,12 +6,12 @@ export class CreateTestCaseUC {
 
   async execute(data: CreateTestCaseInput): Promise<TestCase> {
 
-    const newTestCase: TestCase = {
-      ...data,
-      id: crypto.randomUUID(), // Standard Web API available in Deno
-      version: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    const newTestCase = {...data,
+          id: crypto.randomUUID(), // Standard Web API available in Deno
+          version: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          testCaseId: ""
     };
 
     await this.repo.save(newTestCase);

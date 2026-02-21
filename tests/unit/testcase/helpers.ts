@@ -46,6 +46,7 @@ export function createTestCaseFactory(overrides?: Partial<TestCase>): TestCase {
     expectedResult: 'Expected Result',
     status: 'draft',
     version: 1,
+    testCaseId: 'test-case-id',
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,
