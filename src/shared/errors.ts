@@ -23,6 +23,12 @@ class ValidationError extends AppError {
 
 }
 
+class DuplicateError extends AppError {
+  constructor(data = "Item" ) {
+    super(`${data} already exists`, 409)
+  }
+}
+
 class DatabaseError extends AppError {
   constructor(detail: PostgresError) {
     const field = DatabaseError.extractFieldFromPostgresError(detail.fields?.detail);
@@ -72,4 +78,5 @@ export {
   NotFoundError,
   UnauthorizedError,
   ValidationError,
+  DuplicateError
 };

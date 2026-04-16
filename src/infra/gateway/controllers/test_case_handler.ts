@@ -1,10 +1,10 @@
 import type { TestCase } from '@ipinstaq/shared/types/types.ts';
-import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
+import type { TestCaseAppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '../middleware/validation_middleware.ts';
 import type { UpdateTestCaseInput } from '@ipinstaq/shared/types/types.ts';
 
-export async function createTestCaseHandler(req: AppRequest, deps: AppDependencies): Promise<Response> {
+export async function createTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
   const result = await deps.createTestCaseUC.execute(req.validated as TestCase);
 
   return Response.json({
@@ -13,7 +13,7 @@ export async function createTestCaseHandler(req: AppRequest, deps: AppDependenci
   }, { status: 201 });
 }
 
-export async function getTestCaseHandler(req: AppRequest, deps: AppDependencies) {
+export async function getTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies) {
 
   const id = req.validated as string;
   if (!id) {
@@ -32,7 +32,7 @@ export async function getTestCaseHandler(req: AppRequest, deps: AppDependencies)
   });
 }
 
-export async function listAllTestCasesHandler(_req: AppRequest, deps: AppDependencies): Promise<Response> {
+export async function listAllTestCasesHandler(_req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
   const result = await deps.listAllTestCaseUC.execute();
 
   return Response.json({
@@ -41,7 +41,7 @@ export async function listAllTestCasesHandler(_req: AppRequest, deps: AppDepende
   });
 }
 
-export async function editTestCaseHandler(req: AppRequest, deps: AppDependencies): Promise<Response> {
+export async function editTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
   const updates = req.validated as UpdateTestCaseInput;
 
   const result = await deps.editTestCaseUC?.execute(updates);

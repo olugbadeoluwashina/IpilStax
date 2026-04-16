@@ -21,7 +21,8 @@ export class TestCaseRepository implements ITestCaseRepository {
 
   async getById(id: string): Promise<TestCase | null> {
     //to be implemented
-    const row: KyselyATestCase | undefined = await this.db.selectFrom('test_cases').selectAll().where('id', '=', id).executeTakeFirst();
+    const row: KyselyATestCase | undefined = await this.db.selectFrom('test_cases').selectAll()
+      .where('id', '=', id).executeTakeFirst();
 
     return row ? toTestCase(row) : null;
   }

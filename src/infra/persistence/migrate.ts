@@ -8,7 +8,7 @@ const db = new Kysely<Database>({dialect});
 const migrator = new Migrator({ db, 
     provider: new FileMigrationProvider({
         fs: {
-            readdir: (p) => Promise.resolve(Array.from(Deno.readDirSync(p)).map((entry) => entry.name)),
+            readdir: (p) => Promise.resolve(Array.from(Deno.readDirSync(p), (entry) => entry.name)),
         },
         path,
         migrationFolder: path.join(Deno.cwd(), "src/infra/persistence/migrations"),

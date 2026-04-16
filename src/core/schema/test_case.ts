@@ -1,8 +1,5 @@
 import { z } from 'zod';
-/**
- * We define the "Source of Truth" for what a Test Case IS.
- */
-// 1. The core logic - What is absolutely required to define a Test Case
+
 export const TestCaseStatusSchema = z.enum({
   draft: 'draft',
   active: 'active',

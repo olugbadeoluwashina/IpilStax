@@ -1,6 +1,6 @@
 import { expect } from '@std/expect';
 import { TestDepsBuilder } from '../../builder/apps_deps.builder.ts';
-import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
+import type { AppDependencies, TestCaseAppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { getTestCaseHandler } from '@ipinstaq/infra/gateway/controllers/test_case_handler.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '@ipinstaq/infra/gateway/middleware/validation_middleware.ts';
@@ -10,7 +10,7 @@ Deno.test("handler throws error when test case is not found", () => {
 
   const req = {validated: '124'} as AppRequest;
 
-  const deps: AppDependencies = new TestDepsBuilder()
+  const deps: TestCaseAppDependencies = new TestDepsBuilder()
     .withGetTestCaseUC({
       execute: () => Promise.resolve(null)
     })
@@ -21,9 +21,12 @@ Deno.test("handler throws error when test case is not found", () => {
 });
 
 Deno.test("handler returns test case when found", async () => {
-  const deps: AppDependencies = new TestDepsBuilder()
+  const deps: TestCaseAppDependencies = new TestDepsBuilder()
     .withGetTestCaseUC({
-      execute: () => Promise.resolve(createTestCaseFactory({id: "123", title: "Test Case 123"}))
+      execute: (req: string) => {
+        if(req) return Promise.resolve(createTestCaseFactory({id: req, title: "Test Case 123"}))
+        else return Promise.resolve(null)
+      }
     })
     .build();
 

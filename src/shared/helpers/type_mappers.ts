@@ -14,13 +14,13 @@ export function toTestCase(row: KyselyATestCase ): TestCase {
   };
 }
 
-export function toProject(row: KyselyAProject): TestProject {
-  return {
-    id: row.id,
-    name: row.name,
-    projectCode: row.project_code,
-    description: row.description,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
-}
+// export function toProject(row: KyselyAProject): TestProject {
+//   return {
+//     id: row.id,
+//     name: row.name,
+//     projectCode: row.project_code,
+//     description: row.description,
+//     createdAt: row.created_at,
+//     updatedAt: row.updated_at,
+//   };
+// }

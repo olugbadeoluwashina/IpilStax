@@ -5,7 +5,7 @@
   "tasks": {
     "db:migrate": "deno run --allow-all --env-file=.env src/infra/persistence/migrate.ts",
     "pre-flight": "deno test && deno task db:migrate",
-    "dev": "deno task pre-flight && deno run --allow-all --watch --env main.ts"
+    "dev": "deno run --allow-all --watch --env main.ts"
   },
   "imports": {
     "@db/postgres": "jsr:@db/postgres@^0.19.5",
