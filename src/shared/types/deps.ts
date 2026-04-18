@@ -1,5 +1,5 @@
 import type { ITestCaseRepository, UpdateTestCaseInput } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
-import { createTestCaseRepository } from '@ipinstaq/infra/persistence/connection.ts';
+import { createTestCaseRepository, createTestProjectRepository } from '@ipinstaq/infra/persistence/connection.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
@@ -19,11 +19,11 @@ export interface TestCaseAppDependencies {
   editTestCaseUC: EditTestCaseUCContract;
 }
 
-export interface AppDependencies extends TestCaseAppDependencies {}
+export interface AppDependencies extends TestCaseAppDependencies, TestProjectAppDependencies {}
 
 export function defineDependencies(): AppDependencies {
   const testCaseRepo = createTestCaseRepository();
-  //const projectRepo = createTestProjectRepository();
+  const projectRepo = createTestProjectRepository();
 
   return {
     testCaseRepo: testCaseRepo,
@@ -32,7 +32,7 @@ export function defineDependencies(): AppDependencies {
     listAllTestCaseUC: new ListAllTestCaseUC(testCaseRepo),
     editTestCaseUC: new EditTestCaseUC(testCaseRepo),
 
-    //createProjectUC: new CreateProjectUseCase(projectRepo)
+    createProjectUC: new CreateProjectUseCase(projectRepo)
   };
 }
 

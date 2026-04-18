@@ -1,6 +1,6 @@
 import { expect } from '@std/expect';
 import { TestDepsBuilder } from '../../builder/apps_deps.builder.ts';
-import type { AppDependencies, TestCaseAppDependencies } from '@ipinstaq/shared/types/deps.ts';
+import type { TestCaseAppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { getTestCaseHandler } from '@ipinstaq/infra/gateway/controllers/test_case_handler.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '@ipinstaq/infra/gateway/middleware/validation_middleware.ts';

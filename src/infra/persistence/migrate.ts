@@ -16,7 +16,9 @@ const migrator = new Migrator({ db,
 })
 
 async function runMigrations() {
-    const { error, results } = await migrator.migrateToLatest();
+  const command = Deno.args[0];
+
+  const { error, results } = command === "down" ? await migrator.migrateDown() : await migrator.migrateToLatest();
 
     //logs
     results?.forEach((it) => {

@@ -5,7 +5,7 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export type RouteHandler = (data: {deps: AppDependencies, req: AppRequest}) => Promise<Response>;
 // Business handlers
-export type AppHandler = (req: AppRequest, deps: AppDependencies) => Promise<Response>;
+export type AppHandler<T> = (req: AppRequest<T>, deps: AppDependencies) => Promise<Response>;
 
 export interface RouteDefinition {
   method: HttpMethod; 

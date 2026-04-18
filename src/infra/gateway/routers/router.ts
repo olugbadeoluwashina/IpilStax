@@ -1,6 +1,7 @@
 import type { AppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { routes } from './routes.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
+import type { AppRequest } from '../middleware/validation_middleware.ts';
 
 
 async function router(req: Request, deps: AppDependencies): Promise<Response> {
@@ -18,9 +19,14 @@ async function router(req: Request, deps: AppDependencies): Promise<Response> {
   }
 
   const params = matchPath(route.path, url.pathname)!;
-  const reqWithParams = Object.assign(req, { params });
 
-  return await route.handler({deps, req: reqWithParams});
+  const appRequest: AppRequest<unknown> = {
+    req,    // The actual Request object
+    params: params,
+    validated: undefined,
+  };
+
+  return await route.handler({deps, req: appRequest});
 
 }
 

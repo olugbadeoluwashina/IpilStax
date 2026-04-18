@@ -1,11 +1,11 @@
-import type { Generated } from 'kysely';
+import type { ColumnType, Generated } from 'kysely';
 import type { TestCaseStatus } from '@ipinstaq/shared/types/types.ts';
 
 export interface TestCasesTable {
   id: Generated<string>; // UUID
   title: string;
   body: string;
-  test_case_id: Generated<string>; // Unique identifier for the test case
+  test_case_id: Generated<string> // Unique identifier for the test case
   expected_result: string;
   status: TestCaseStatus;
   version: Generated<number>;
@@ -34,9 +34,10 @@ export interface TestCategoriesTable {
 export interface ProjectsTable {
   id: Generated<string>; // UUID
   name: string;
-  project_code: string; // Unique project code
+  project_code: ColumnType<string, string, never> ; // Unique project code
   description: string | null;
-  created_at: Generated<Date>;
+  created_at: ColumnType<Date, Date, never>;
+  updated_at: ColumnType<Date, Date, never>
   last_project_code_number: number; // To track the last used number for project code generation
 }
 
@@ -44,4 +45,5 @@ export interface Database {
   test_cases: TestCasesTable;
   test_suites: TestSuitesTable;
   test_categories: TestCategoriesTable;
+  test_projects: ProjectsTable;
 }

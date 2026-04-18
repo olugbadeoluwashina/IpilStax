@@ -3,9 +3,10 @@ import type { TestCaseAppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '../middleware/validation_middleware.ts';
 import type { UpdateTestCaseInput } from '@ipinstaq/shared/types/types.ts';
+import { sendSuccessResponse } from '@ipinstaq/shared/helpers/response.ts';
 
 export async function createTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
-  const result = await deps.createTestCaseUC.execute(req.validated as TestCase);
+  const result = await deps.createTestCaseUC.execute(req.validated as TestCase)
 
   return Response.json({
     success: true,
@@ -35,10 +36,7 @@ export async function getTestCaseHandler(req: AppRequest, deps: TestCaseAppDepen
 export async function listAllTestCasesHandler(_req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
   const result = await deps.listAllTestCaseUC.execute();
 
-  return Response.json({
-    success: true,
-    data: result,
-  });
+  return Response.json(sendSuccessResponse(result))
 }
 
 export async function editTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {

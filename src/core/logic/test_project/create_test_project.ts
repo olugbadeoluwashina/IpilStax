@@ -9,7 +9,6 @@ export class CreateProjectUseCase {
     async execute(data: TestProjectInput): Promise<TestProject | undefined> {
         const newProject: TestProject = {
             ...data,
-            id: crypto.randomUUID(),
             createdAt: new Date(),
             updatedAt: new Date(),
             projectCode: ""

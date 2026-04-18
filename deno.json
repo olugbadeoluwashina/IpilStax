@@ -4,6 +4,7 @@
   "exports": "./main.ts",
   "tasks": {
     "db:migrate": "deno run --allow-all --env-file=.env src/infra/persistence/migrate.ts",
+    "migrate:down": "deno run --allow-all --env-file=.env src/infra/persistence/migrate.ts down",
     "pre-flight": "deno test && deno task db:migrate",
     "dev": "deno run --allow-all --watch --env main.ts"
   },

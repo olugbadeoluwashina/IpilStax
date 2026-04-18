@@ -4,12 +4,13 @@ import { Database } from '../db_schema.ts';
 
 export async function up(db: Kysely<Database>) {
     await db.schema
-        .createTable("projects")
+        .createTable("test_projects")
         .addColumn("id", "uuid", (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
         .addColumn("name", "varchar(255)", (col) => col.notNull())
         .addColumn("project_code", "char(10)", (col) => col.notNull().unique())
         .addColumn("description", "text")
         .addColumn("created_at", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
+        .addColumn("updated_at", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
         .addColumn("last_project_code_number", "integer", (col) => col.notNull().defaultTo(0))
         .execute();
 
@@ -33,7 +34,7 @@ export async function up(db: Kysely<Database>) {
 
     await db.schema
         .alterTable("test_cases")
-        .addColumn("test_case_id", "char(100)", (col) => col.notNull().unique())
+        .addColumn("test_case_id", "varchar(255)", (col) => col.notNull().unique())
         .addColumn("suite_id", "uuid", (col) => col.references("test_suites.id").onDelete("cascade").notNull())
         .addColumn("category_id", "uuid", (col) => col.references("test_categories.id").onDelete("set null").notNull())
         .execute();
@@ -45,6 +46,8 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.alterTable("test_cases").dropColumn("category_id").execute();
   await db.schema.alterTable("test_cases").dropColumn("suite_id").execute();
   await db.schema.alterTable("test_cases").dropColumn("test_case_id").execute();
+  await db.schema.dropTable("test_projects").execute();
   await db.schema.dropTable("test_categories").execute();
   await db.schema.dropTable("test_suites").execute();
+
 }
