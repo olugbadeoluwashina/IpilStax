@@ -21,7 +21,8 @@
 
     "@std/assert": "jsr:@std/assert",
     "@std/expect": "jsr:@std/expect",
-    "@std/path": "jsr:@std/path"
+    "@std/path": "jsr:@std/path",
+    "@std/testing": "jsr:@std/testing"
   },
 
   "lint": {

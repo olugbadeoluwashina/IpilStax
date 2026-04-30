@@ -20,7 +20,7 @@ export type ValidatedRequest = z.infer<typeof RequestValidationSchema>;
 
 function validate<T extends z.ZodType>( schema: T, select: (req: ValidatedRequest) => unknown) {
   
-  return async function ( appreq: AppRequest<any>, next: () => Promise<Response>) {
+  return async function ( appreq: AppRequest<unknown>, next: () => Promise<Response>) {
 
     console.log("Validating request...", appreq.req.method, appreq.req.url);
     const url = new URL(appreq.req.url);

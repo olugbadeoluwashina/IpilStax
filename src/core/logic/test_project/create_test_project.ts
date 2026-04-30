@@ -7,21 +7,23 @@ export class CreateProjectUseCase {
     constructor(private repo: ITestProjectRepository) {}
 
     async execute(data: TestProjectInput): Promise<TestProject | undefined> {
-        const newProject: TestProject = {
-            ...data,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            projectCode: ""
-        };
 
-        const doesProjectExist = await this.repo.isProjectNameAvailable(newProject.name);
+        const doesProjectExist = await this.repo.isProjectNameAvailable(data.name);
 
         if(!doesProjectExist) {
             return undefined;
         }
 
-        const projectCode = await this.getAvailableProjectCode(newProject.name);
-        newProject.projectCode = projectCode;
+        const projectCode = await this.getAvailableProjectCode(data.name);
+
+        const newProject: TestProject = {
+            ...data,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            projectCode,
+            lastProjectCodeNumber: 0,
+            id: crypto.randomUUID()
+        }
                 
         await this.repo.create(newProject);
         return newProject;

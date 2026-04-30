@@ -1,10 +1,10 @@
 import { assertEquals, assertExists } from '@std/assert';
 import { expect } from '@std/expect'
+import { assertSpyCalls, spy } from '@std/testing/mock'
 import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
-import { createTestCaseFactory, fakeTestCaseRepo } from './helpers.ts';
+import { createTestCaseFactory, fakeTestCaseRepo, MockTestCaseRepository } from './helpers.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
-import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
-import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
+import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts'
 
 
 Deno.test('CreateTestCaseUseCase: should successfully create a new test case', async () => {
@@ -16,6 +16,7 @@ Deno.test('CreateTestCaseUseCase: should successfully create a new test case', a
     description: '1. Enter credentials, 2. Click login',
     expectedResult: 'User is redirected to dashboard',
     status: 'draft' as const,
+    projectId: 'project-id',
   };
 
   // 2. Execute (Act)
@@ -26,11 +27,53 @@ Deno.test('CreateTestCaseUseCase: should successfully create a new test case', a
   assertEquals(result.version, 1);
 });
 
+Deno.test('CreateTestCaseUseCase: should generate test case id successfully', async () => {
+  const mockrepo = fakeTestCaseRepo()
+  mockrepo.getProjectCodeAndSequence = () => Promise.resolve({projectCode: 'TEST', sequence: 2});
+
+  const useCase = new CreateTestCaseUC(mockrepo);
+  const testCase = await useCase.execute(createTestCaseFactory());
+
+  expect(testCase.testCaseId).toBeTruthy();
+  expect(testCase.testCaseId).toEqual('TEST-3');
+})
+
+Deno.test('CreateTestCaseUseCase: should update project sequence successfully when test case is created', async (test) => {
+  const mockrepo = new MockTestCaseRepository();
+  const useCase = new CreateTestCaseUC(mockrepo);
+  const spied = spy(mockrepo, "getProjectCodeAndSequence");
+  let testCase = await useCase.execute(createTestCaseFactory());
+
+  
+  await test.step('verify the getProjectCodeAndSequence is called', () => {
+    assertSpyCalls(spied, 1)
+  })
+
+  await test.step('verify the sequence for the project is updated by one', () => {
+    const sequence = mockrepo.sequenceSet.get(testCase.projectId)?.seq
+    expect(sequence).toBeGreaterThan(0)
+  })
+
+  await test.step('verify testcase id is sequential', async () => {
+    let i = 0;
+    while(i < 4) {
+      expect(testCase.testCaseId).toBe('TEST-'+(i+1));
+      testCase = await useCase.execute(createTestCaseFactory());
+      i += 1
+    }
+  })
+
+});
+
+Deno.test('CreateTestCaseUseCase: should generate test case id for different projects successfully', async () => {
+  const mockrepo = fakeTestCaseRepo();
+  throw new Error('Not implemented');
+})
+
 Deno.test('GetTestCaseUseCase: should get test case by id after creation', async (test) => {
   const repo = fakeTestCaseRepo();
 
   await test.step('can retrieve existing test case', async () => {
-
 
     await repo.save(createTestCaseFactory({
       id: 'existing-id-123',

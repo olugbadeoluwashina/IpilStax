@@ -1,15 +1,24 @@
 import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
-import type { TestCase, UpdateTestCaseInput } from '@ipinstaq/shared/types/types.ts';
+import type { TestCase, TestProject, UpdateTestCaseInput } from '@ipinstaq/shared/types/types.ts';
 
 /**
  * This is a Mock Repository.
  * It stays in RAM and never touches the disk.
  */
 export class MockTestCaseRepository implements ITestCaseRepository {
+  
   public testCases: TestCase[] = [];
+  sequenceSet: Map<string, {code: string,seq: number}> = new Map([['project-id', {code: 'TEST', seq: 0}]]);
 
   async save(testCase: TestCase) {
+    //this.sequenceSet.set(testCase.projectId, (this.sequenceSet.get(testCase.id) || 0) + 1);
     await Promise.resolve(this.testCases.push(testCase));
+
+    //update sequence after a save
+    const project = this.sequenceSet.get(testCase.projectId);
+    if(project) {
+      project.seq += 1;
+    }
   }
 
   async getById(id: string): Promise<TestCase | null> {
@@ -31,6 +40,11 @@ export class MockTestCaseRepository implements ITestCaseRepository {
       version: (this.testCases[index].version || 1) + 1, updatedAt: new Date() };
     return this.testCases[index];
   }
+
+  getProjectCodeAndSequence(projectId: string)  {
+    const project = this.sequenceSet.get(projectId);
+    return Promise.resolve({projectCode: project?.code || 'TEST', sequence: project?.seq || 0});
+  }
 }
 
 export function fakeTestCaseRepo(): ITestCaseRepository {
@@ -47,6 +61,7 @@ export function createTestCaseFactory(overrides?: Partial<TestCase>): TestCase {
     status: 'draft',
     version: 1,
     testCaseId: 'test-case-id',
+    projectId: 'project-id',
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,

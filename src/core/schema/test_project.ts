@@ -6,8 +6,9 @@ export const TestProjectInputSchema = z.object({
 })
 
 export const TestProjectSchema = TestProjectInputSchema.extend({
-  id: z.uuid().optional(),
+  id: z.uuid(),
   projectCode: z.string().min(1, "Project code is required").max(10),
+  lastProjectCodeNumber: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

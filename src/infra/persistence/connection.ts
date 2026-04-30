@@ -19,9 +19,9 @@ export function getDb() {
 }
 
 export function createTestCaseRepository(): ITestCaseRepository {
-    // Here you would normally set up your actual repository, e.g., connecting to a database
-    const db = getDb(); // Assume getDb() initializes and returns your database connection
-    return new TestCaseRepository(db);
+  // Here you would normally set up your actual repository, e.g., connecting to a database
+  const db = getDb(); // Assume getDb() initializes and returns your database connection
+  return new TestCaseRepository(db);
 }
 
 export function createTestProjectRepository(): ITestProjectRepository {
