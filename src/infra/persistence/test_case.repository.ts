@@ -14,7 +14,11 @@ export class TestCaseRepository implements ITestCaseRepository {
       title: testCase.title,
       body: testCase.description,
       expected_result: testCase.expectedResult,
-      status: testCase.status
+      status: testCase.status,
+      test_case_id: testCase.testCaseId,
+      project_id: testCase.projectId,
+      suite_id: testCase.suiteId,
+      category_id: testCase.categoryId
     };
 
     //Create a transaction to save test cases - (Get project - update the seq table from project - then save the test case)

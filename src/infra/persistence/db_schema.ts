@@ -9,7 +9,7 @@ export interface TestCasesTable {
   expected_result: string;
   status: TestCaseStatus;
   version: Generated<number>;
-  project_id: ColumnType<string, never, never>; // Foreign key to ProjectsTable
+  project_id: ColumnType<string, string, never>; // Foreign key to ProjectsTable
   suite_id?: string; // Foreign key to TestSuitesTable
   category_id?: string; // Foreign key to TestCategoriesTable
   created_at: Generated<Date>;
