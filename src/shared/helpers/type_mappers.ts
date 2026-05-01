@@ -11,6 +11,9 @@ export function toTestCase(row: KyselyATestCase ): TestCase {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     version: row.version,
+    projectId: row.project_id,
+    suiteId: row.suite_id,
+    categoryId: row.category_id
   };
 }
 

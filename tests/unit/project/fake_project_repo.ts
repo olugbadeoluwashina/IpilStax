@@ -36,6 +36,7 @@ export function createTestProjectFactory(overrides?: Partial<TestProject>): Test
         description: 'A project for testing',
         createdAt: new Date(),
         updatedAt: new Date(),
+        lastProjectCodeNumber: 0,
         ...overrides,
     };
 }

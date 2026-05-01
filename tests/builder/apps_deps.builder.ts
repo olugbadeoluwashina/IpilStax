@@ -1,16 +1,13 @@
-import type { GetTestCaseUCContract, TestCaseAppDependencies, TestProjectAppDependencies } from '@ipinstaq/shared/types/deps.ts';
-import { fakeTestCaseRepo } from '../unit/testcase/helpers.ts';
+import type { AppDependencies, GetTestCaseUCContract, TestCaseAppDependencies, TestProjectAppDependencies } from '@ipinstaq/shared/types/deps.ts';
 import type { TestCase } from '@ipinstaq/shared/types/types.ts';
 
 export class TestDepsBuilder {
+  private readonly deps: TestCaseAppDependencies
 
-  private readonly deps: TestCaseAppDependencies;
-  
   constructor() {
-    const repo = fakeTestCaseRepo();
 
     this.deps = {
-      testCaseRepo: repo,
+      
       getTestCaseUC: {
         execute: (id: string) => Promise.resolve(null)
       },
@@ -41,12 +38,32 @@ export class TestDepsBuilder {
 }
 
 export class TestProjectBuilder {
+  private readonly deps: TestProjectAppDependencies;
 
-  constructor(private readonly deps: TestProjectAppDependencies) {
+  constructor() {
+
+    this.deps = {
+      createProjectUC: {
+        execute: async (input) => {
+          throw new Error("createProjectUC.execute not implemented in TestProjectBuilder"); }
+      }
+    }
     
   }
 
   build() {
     return this.deps;
+  }
+}
+
+export class AppDepsBuilder {
+  private testBuilder = new TestDepsBuilder();
+  private projectBuilder = new TestProjectBuilder();
+
+  build(): AppDependencies {
+    return {
+      ...this.testBuilder.build(),
+      ...this.projectBuilder.build(),
+    };
   }
 }

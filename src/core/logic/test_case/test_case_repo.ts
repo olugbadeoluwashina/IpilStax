@@ -1,4 +1,4 @@
-import type { TestCase, TestProject } from '@ipinstaq/shared/types/types.ts';
+import type { TestCase } from '@ipinstaq/shared/types/types.ts';
 
 /**
  * This is an interface (a contract).

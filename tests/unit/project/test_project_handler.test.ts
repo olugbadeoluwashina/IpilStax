@@ -4,6 +4,7 @@ import { createProjectHandler } from '@ipinstaq/infra/gateway/controllers/test_p
 import type { AppRequest } from '@ipinstaq/infra/gateway/middleware/validation_middleware.ts';
 import { createTestProjectFactory } from './fake_project_repo.ts';
 import { DuplicateError } from '@ipinstaq/shared/errors.ts'
+import { TestProjectInput } from '@ipinstaq/shared/types/types.ts';
 
 Deno.test("CREATEPROJECT: test project returns 201 status code", async() => {
 
@@ -18,7 +19,7 @@ Deno.test("CREATEPROJECT: test project returns 201 status code", async() => {
          createProjectUC: fakeCreateProjectUC,
     }
     
-    const req = {validated: {name: "Test Project", description: "A project for testing"}} as AppRequest
+    const req = {validated: {name: "Test Project", description: "A project for testing"}} as AppRequest<TestProjectInput>
 
     const response = await createProjectHandler(req, deps);
     const json = await response.json();
@@ -34,7 +35,7 @@ Deno.test("CREATEPROJECT: system throws error when project name already exists",
         execute: () => Promise.resolve(undefined)
     };
 
-    const req = {validated: {name: 'TESPROJ'}} as AppRequest
+    const req = {validated: {name: 'TESPROJ'}} as AppRequest<TestProjectInput>
 
     const deps: TestProjectAppDependencies = {
          createProjectUC: fakeCreateProjectUC,

@@ -5,6 +5,7 @@ import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_cas
 import { createTestCaseFactory, fakeTestCaseRepo, MockTestCaseRepository } from './helpers.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts'
+import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
 
 
 Deno.test('CreateTestCaseUseCase: should successfully create a new test case', async () => {

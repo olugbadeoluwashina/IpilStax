@@ -11,7 +11,9 @@ const BaseTestCaseSchema = z.object({
   description: z.string().min(10, "Description is too short"),
   expectedResult: z.string().min(10, "Expected result is required"),
   status: TestCaseStatusSchema,
-  projectId: z.uuid(),
+  projectId: z.uuid("Expects a valid project uuid"),
+  suiteId: z.uuid("Not a valid uuid").optional(),
+  categoryId: z.uuid("Not a valid uuid").optional(),
 });
 
 // 2. Schema for CREATING a Test Case (No IDs allowed from the user)

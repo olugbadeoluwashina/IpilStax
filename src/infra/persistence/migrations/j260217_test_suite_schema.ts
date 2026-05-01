@@ -1,6 +1,6 @@
 import { sql } from 'kysely';
-import { Kysely } from 'kysely';
-import { Database } from '../db_schema.ts';
+import type { Kysely } from 'kysely';
+import type { Database } from '../db_schema.ts';
 
 export async function up(db: Kysely<Database>) {
     await db.schema
