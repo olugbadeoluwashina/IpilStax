@@ -46,8 +46,16 @@ function validate<T extends z.ZodType>( schema: T, select: (req: ValidatedReques
     console.log("Validated Request:", selected);
     const result = schema.safeParse(selected);
     console.log("Validation result:", result);
+
     if (!result.success) {
-      throw new ValidationError(result.error);
+      const messages = result.error.issues.map(issue => {
+        if (issue.path.length > 0) {
+          return `${issue.path.join(".")}: ${issue.message}`;
+        }
+        return issue.message;
+      });
+      console.log("Validation errors:", messages);
+      throw new ValidationError(messages.join("\n"))
     }
 
     appreq.validated = result.data;

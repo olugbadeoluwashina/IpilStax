@@ -8,7 +8,7 @@ import type { TestCase, TestProject, UpdateTestCaseInput } from '@ipinstaq/share
 export class MockTestCaseRepository implements ITestCaseRepository {
   
   public testCases: TestCase[] = [];
-  sequenceSet: Map<string, {code: string,seq: number}> = new Map([['project-id', {code: 'TEST   ', seq: 0}]]);
+  sequenceSet: Map<string, {code: string,seq: number}> = new Map([['project-id', {code: 'TEST', seq: 0}]]);
 
   async save(testCase: TestCase) {
     //this.sequenceSet.set(testCase.projectId, (this.sequenceSet.get(testCase.id) || 0) + 1);

@@ -16,9 +16,9 @@ class AppError extends Error {
 }
 
 class ValidationError extends AppError {
-  constructor(error: z.ZodError) {
+  constructor(error: string) {
     console.log("Validation Error ***********************")
-    super('Invalid input data', 400, z.flattenError(error));
+    super('Invalid input data', 400, error);
   }
 
 }
