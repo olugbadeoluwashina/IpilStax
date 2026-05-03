@@ -3,12 +3,19 @@ import { Pool } from 'pg';
 import type { Database } from './db_schema.ts';
 import { TestCaseRepository } from './test_case.repository.ts';
 import type { ITestCaseRepository } from '@ipinstaq/core/logic/test_case/test_case_repo.ts';
-import { ITestProjectRepository } from '@ipinstaq/core/logic/test_project/test_project_repo.ts';
+import type { ITestProjectRepository } from '@ipinstaq/core/logic/test_project/test_project_repo.ts';
 import { TestProjectRepository } from './test_project.repository.ts';
+
+const connectionString = Deno.env.get('DATABASE_URL');
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL environment variable is missing!");
+}
 
 export const dialect = new PostgresDialect({
   pool: new Pool({
-    connectionString: Deno.env.get('DATABASE_URL'),
+    connectionString,
+    ssl: connectionString.includes('neon.tech')? {rejectUnauthorized: false,} : false,
   }),
 });
 

@@ -1,6 +1,5 @@
 import type { CreateTestCaseInput, TestCase } from '@ipinstaq/shared/types/types.ts';
 import type { ITestCaseRepository } from './test_case_repo.ts';
-import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 
 export class CreateTestCaseUC {
   constructor(private repo: ITestCaseRepository) {}
