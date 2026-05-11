@@ -10,7 +10,7 @@ interface ErrorResponse {
   code?: string;
 }
 
-export function sendSuccessResponse<T>(data: T, message?: string) {
+export function sendSuccessResponse<T>(data: T, message?: string): SuccessResponse<T> {
   return {
     success: true,
     message,

@@ -1,4 +1,4 @@
-import type { TestProject } from "@ipinstaq/shared/types/types.ts";
+import type { TestProject } from '@ipinstaq/shared/types/types.ts';
 /**
  * This is an interface (a contract).
  * It tells the system: "I don't care HOW you save it,

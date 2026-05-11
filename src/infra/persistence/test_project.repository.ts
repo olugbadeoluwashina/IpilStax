@@ -7,13 +7,18 @@ export class TestProjectRepository implements ITestProjectRepository {
   constructor(private db: Kysely<Database>) {}
 
   async isProjectCodeAvailable(projectCode: string): Promise<boolean> {
-    const code = await this.db.selectFrom('test_projects').select('id').where('project_code', '=', projectCode).executeTakeFirst();
+    const code = await this.db.selectFrom('test_projects').select('id').where(
+      'project_code',
+      '=',
+      projectCode,
+    ).executeTakeFirst();
     return code ? false : true;
   }
 
   async isProjectNameAvailable(name: string): Promise<boolean> {
-    const project = await this.db.selectFrom('test_projects').select('id').where('name', '=', name).executeTakeFirst();
-    return project ? false: true;
+    const project = await this.db.selectFrom('test_projects').select('id').where('name', '=', name)
+      .executeTakeFirst();
+    return project ? false : true;
   }
 
   async create(testProject: TestProject): Promise<void> {
@@ -24,10 +29,9 @@ export class TestProjectRepository implements ITestProjectRepository {
       description: testProject.description,
       created_at: testProject.createdAt,
       updated_at: testProject.updatedAt,
-      last_project_code_number: 0
-    } 
+      last_project_code_number: 0,
+    };
 
-    await this.db.insertInto('test_projects').values(newProject).execute();
+    await this.db.insertInto('test_projects').values(newProject).execute()
   }
-
 }

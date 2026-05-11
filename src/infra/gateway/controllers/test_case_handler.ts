@@ -6,19 +6,17 @@ import type { UpdateTestCaseInput } from '@ipinstaq/shared/types/types.ts';
 import { sendSuccessResponse } from '@ipinstaq/shared/helpers/response.ts';
 
 export async function createTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
-  const result = await deps.createTestCaseUC.execute(req.validated as TestCase)
+  const { data } = req.validated as { data: TestCase[] };
 
-  return Response.json({
-    success: true,
-    data: result,
-  }, { status: 201 });
+  const result = await deps.createTestCaseUC.execute(data);
+
+  return Response.json(sendSuccessResponse(result, 'All Test Cases were created successfully'));
 }
 
 export async function getTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies) {
-
   const id = req.validated as string;
   if (!id) {
-    throw new NotFoundError("Missing test case id");
+    throw new NotFoundError('Missing test case id');
   }
 
   const result = await deps.getTestCaseUC.execute(id);
@@ -33,13 +31,19 @@ export async function getTestCaseHandler(req: AppRequest, deps: TestCaseAppDepen
   });
 }
 
-export async function listAllTestCasesHandler(_req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
+export async function listAllTestCasesHandler(
+  _req: AppRequest,
+  deps: TestCaseAppDependencies,
+): Promise<Response> {
   const result = await deps.listAllTestCaseUC.execute();
 
-  return Response.json(sendSuccessResponse(result))
+  return Response.json(sendSuccessResponse(result));
 }
 
-export async function editTestCaseHandler(req: AppRequest, deps: TestCaseAppDependencies): Promise<Response> {
+export async function editTestCaseHandler(
+  req: AppRequest,
+  deps: TestCaseAppDependencies,
+): Promise<Response> {
   const updates = req.validated as UpdateTestCaseInput;
 
   const result = await deps.editTestCaseUC?.execute(updates);

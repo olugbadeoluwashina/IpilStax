@@ -6,23 +6,27 @@ import type { TestCase, TestProject, UpdateTestCaseInput } from '@ipinstaq/share
  * It stays in RAM and never touches the disk.
  */
 export class MockTestCaseRepository implements ITestCaseRepository {
-  
   public testCases: TestCase[] = [];
-  sequenceSet: Map<string, {code: string,seq: number}> = new Map([['project-id', {code: 'TEST', seq: 0}]]);
+  sequenceSet: Map<string, { code: string; seq: number }> = new Map([['project-id', {
+    code: 'TEST',
+    seq: 0,
+  }]]);
 
-  async save(testCase: TestCase) {
+  async save(testCase: TestCase | TestCase[], sequence: number) {
     //this.sequenceSet.set(testCase.projectId, (this.sequenceSet.get(testCase.id) || 0) + 1);
-    await Promise.resolve(this.testCases.push(testCase));
+    if(!Array.isArray(testCase)) testCase = [testCase];
+
+    await Promise.resolve(testCase.forEach((tc) => this.testCases.push(tc)));
 
     //update sequence after a save
-    const project = this.sequenceSet.get(testCase.projectId);
-    if(project) {
-      project.seq += 1;
+    const project = this.sequenceSet.get(testCase[0].projectId);
+    if (project) {
+      project.seq += sequence;
     }
   }
 
   async getById(id: string): Promise<TestCase | null> {
-    console.log("DEBUG - MockTestCaseRepository.getById called with id:", id);
+    console.log('DEBUG - MockTestCaseRepository.getById called with id:', id);
     return this.testCases.find((tc) => tc.id === id) || null;
   }
 
@@ -36,21 +40,24 @@ export class MockTestCaseRepository implements ITestCaseRepository {
       return null;
     }
 
-    this.testCases[index] = { ...this.testCases[index], ...updates, 
-      version: (this.testCases[index].version || 1) + 1, updatedAt: new Date() };
+    this.testCases[index] = {
+      ...this.testCases[index],
+      ...updates,
+      version: (this.testCases[index].version || 1) + 1,
+      updatedAt: new Date(),
+    };
     return this.testCases[index];
   }
 
-  getProjectCodeAndSequence(projectId: string)  {
+  getProjectCodeAndSequence(projectId: string) {
     const project = this.sequenceSet.get(projectId);
-    return Promise.resolve({projectCode: project?.code || 'TEST', sequence: project?.seq || 0});
+    return Promise.resolve({ projectCode: project?.code || 'TEST', sequence: project?.seq || 0 });
   }
 }
 
 export function fakeTestCaseRepo(): ITestCaseRepository {
   return new MockTestCaseRepository();
 }
-
 
 export function createTestCaseFactory(overrides?: Partial<TestCase>): TestCase {
   return {

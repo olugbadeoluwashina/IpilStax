@@ -7,12 +7,12 @@ import type { TestCase } from '@ipinstaq/shared/types/types.ts';
  */
 export interface ITestCaseRepository {
   getById(id: string): Promise<TestCase | null>;
-  save(testCase: TestCase): Promise<void>;
+  save(testCase: TestCase | TestCase[], sequence: number): Promise<void>;
   listAll(): Promise<TestCase[]>;
   edit(updates: UpdateTestCaseInput): Promise<TestCase | null>;
-  getProjectCodeAndSequence(projectId: string): Promise<{projectCode: string, sequence: number}>;
+  getProjectCodeAndSequence(projectId: string): Promise<{ projectCode: string; sequence: number }>;
 }
 
-type MutableFields = Pick< TestCase, "title" | "description" | "expectedResult" | "status">;
+type MutableFields = Pick<TestCase, 'title' | 'description' | 'expectedResult' | 'status'>;
 
-export type UpdateTestCaseInput =  { id: string} & Partial<MutableFields>;
+export type UpdateTestCaseInput = { id: string } & Partial<MutableFields>;

@@ -1,12 +1,11 @@
 import { assertEquals, assertExists } from '@std/assert';
-import { expect } from '@std/expect'
-import { assertSpyCalls, spy } from '@std/testing/mock'
+import { expect } from '@std/expect';
+import { assertSpyCalls, spy } from '@std/testing/mock';
 import { CreateTestCaseUC } from '@ipinstaq/core/logic/test_case/create_test_case.ts';
 import { createTestCaseFactory, fakeTestCaseRepo, MockTestCaseRepository } from './helpers.ts';
 import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
-import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts'
+import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
 import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
-
 
 Deno.test('CreateTestCaseUseCase: should successfully create a new test case', async () => {
   // 1. Setup (Arrange)
@@ -29,57 +28,74 @@ Deno.test('CreateTestCaseUseCase: should successfully create a new test case', a
 });
 
 Deno.test('CreateTestCaseUseCase: should generate test case id successfully', async () => {
-  const mockrepo = fakeTestCaseRepo()
-  mockrepo.getProjectCodeAndSequence = () => Promise.resolve({projectCode: 'TEST', sequence: 2});
+  const mockrepo = fakeTestCaseRepo();
+  mockrepo.getProjectCodeAndSequence = () => Promise.resolve({ projectCode: 'TEST', sequence: 2 });
 
   const useCase = new CreateTestCaseUC(mockrepo);
   const testCase = await useCase.execute(createTestCaseFactory());
 
   expect(testCase.testCaseId).toBeTruthy();
   expect(testCase.testCaseId).toEqual('TEST-3');
-})
+});
 
 Deno.test('CreateTestCaseUseCase: should update project sequence successfully when test case is created', async (test) => {
   const mockrepo = new MockTestCaseRepository();
+  mockrepo.getProjectCodeAndSequence = () =>
+    Promise.resolve({ projectCode: 'TESTAQ', sequence: 3 });
+
   const useCase = new CreateTestCaseUC(mockrepo);
-  const spied = spy(mockrepo, "getProjectCodeAndSequence");
+  const spied = spy(mockrepo, 'getProjectCodeAndSequence');
   let testCase = await useCase.execute(createTestCaseFactory());
 
-  
   await test.step('verify the getProjectCodeAndSequence is called', () => {
-    assertSpyCalls(spied, 1)
-  })
+    assertSpyCalls(spied, 1);
+  });
 
   await test.step('verify the sequence for the project is updated by one', () => {
-    const sequence = mockrepo.sequenceSet.get(testCase.projectId)?.seq
-    expect(sequence).toBeGreaterThan(0)
-  })
+    const sequence = mockrepo.sequenceSet.get('project-id')?.seq;
+    expect(sequence).toBeGreaterThan(0);
+  });
 
   await test.step('verify testcase id is sequential', async () => {
-    let i = 0;
-    while(i < 4) {
-      expect(testCase.testCaseId).toBe('TEST-'+(i+1));
-      testCase = await useCase.execute(createTestCaseFactory());
-      i += 1
-    }
-  })
+    let i = mockrepo.sequenceSet.get('project-id')?.seq || 0;
 
+    while (i <= 4) {
+      expect(testCase.testCaseId).toBe('TESTAQ-' + i);
+      testCase = await useCase.execute(createTestCaseFactory());
+      i += 1;
+    }
+  });
 });
 
 Deno.test('CreateTestCaseUseCase: should generate test case id for different projects successfully', async () => {
   const mockrepo = fakeTestCaseRepo();
-  throw new Error('Not implemented');
-})
+  mockrepo.getProjectCodeAndSequence = async (projectId: string) => {
+    if (projectId === 'project-a') {
+      return { projectCode: 'PROJA', sequence: 0 };
+    }
+    if (projectId === 'project-b') {
+      return { projectCode: 'PROJB', sequence: 5 };
+    }
+    return { projectCode: 'OTHER', sequence: 0 };
+  };
+
+  const useCase = new CreateTestCaseUC(mockrepo);
+  const testCaseA = await useCase.execute(createTestCaseFactory({ projectId: 'project-a' }));
+  const testCaseB = await useCase.execute(createTestCaseFactory({ projectId: 'project-b' }));
+
+  expect(testCaseA.testCaseId).toBe('PROJA-1');
+  expect(testCaseB.testCaseId).toBe('PROJB-6');
+});
 
 Deno.test('GetTestCaseUseCase: should get test case by id after creation', async (test) => {
   const repo = fakeTestCaseRepo();
 
   await test.step('can retrieve existing test case', async () => {
-
-    await repo.save(createTestCaseFactory({
-      id: 'existing-id-123',
-      title: 'Verify User Logout'
-    }));
+    await repo.save(
+      createTestCaseFactory({
+        id: 'existing-id-123',
+        title: 'Verify User Logout',
+      }), 3);
 
     const getUseCase = new GetTestCaseUC(repo);
     const retrievedTestCase = await getUseCase.execute('existing-id-123');
@@ -92,56 +108,55 @@ Deno.test('GetTestCaseUseCase: should get test case by id after creation', async
     const result = await getUseCase.execute('non-existing-id');
     expect(result).toBeNull();
   });
-
 });
 
-Deno.test("ListAllTestCaseUC should list all test cases", async (test) => {
-
+Deno.test('ListAllTestCaseUC should list all test cases', async (test) => {
   const repo = fakeTestCaseRepo();
 
-  await test.step("should return empty array when no test cases exist", async () => {
+  await test.step('should return empty array when no test cases exist', async () => {
     const listUseCase = new ListAllTestCaseUC(repo);
     const allTestCases = await listUseCase.execute();
     expect(allTestCases.length).toBe(0);
   });
 
-  await test.step("should return all test cases when they exist", async () => {
+  await test.step('should return all test cases when they exist', async () => {
+    // Seed with some test cases
+    repo.listAll = () =>
+      Promise.resolve([
+        createTestCaseFactory({
+          id: 'id-1',
+          title: 'Test Case 1',
+        }),
+        createTestCaseFactory({
+          id: 'id-2',
+          title: 'Test Case 2',
+        }),
+      ]);
 
-  // Seed with some test cases
-  repo.listAll = () => Promise.resolve([
-    createTestCaseFactory({
-      id: 'id-1',
-      title: 'Test Case 1',
-    }),
-    createTestCaseFactory({
-      id: 'id-2',
-      title: 'Test Case 2',
-    }),
-  ]);
+    const listUseCase = new ListAllTestCaseUC(repo);
+    const allTestCases = await listUseCase.execute();
 
-  const listUseCase = new ListAllTestCaseUC(repo);
-  const allTestCases = await listUseCase.execute();
-
-  expect(allTestCases.length).toBe(2);
+    expect(allTestCases.length).toBe(2);
   });
-
 });
 
-Deno.test("EditTestCaseUC should edit existing test case", async () => {
-
+Deno.test('EditTestCaseUC should edit existing test case', async () => {
   const repo = fakeTestCaseRepo();
 
   // Seed with a test case
-  await repo.save(createTestCaseFactory({
-    id: 'id-to-edit',
-    title: 'Original Title',
-  }));
+  await repo.save(
+    createTestCaseFactory({
+      id: 'id-to-edit',
+      title: 'Original Title',
+    }),
+    3,
+  );
 
   const editUseCase = new EditTestCaseUC(repo);
 
   const updates = {
     id: 'id-to-edit',
-    title: 'Updated Title'
+    title: 'Updated Title',
   };
 
   const updatedTestCase = await editUseCase.execute(updates);
@@ -150,5 +165,3 @@ Deno.test("EditTestCaseUC should edit existing test case", async () => {
   expect(updatedTestCase?.title).toBe(updates.title);
   expect(updatedTestCase?.version).toBe(2);
 });
-
-

@@ -5,10 +5,16 @@ export interface TestCasesTable {
   id: Generated<string>; // UUID
   title: string;
   body: string;
-  test_case_id: Generated<string> // Unique identifier for the test case
-  expected_result: string;
+  test_case_id: Generated<string>; // Unique identifier for the test case
+  expected_result?: string;
   status: TestCaseStatus;
   version: Generated<number>;
+  pre_conditions?: string;
+  steps?: string;
+  priority?: number;
+  actual_result?: string;
+  execution_date?: Generated<Date>;
+  execution_status?: string;
   project_id: ColumnType<string, string, never>; // Foreign key to ProjectsTable
   suite_id?: string; // Foreign key to TestSuitesTable
   category_id?: string; // Foreign key to TestCategoriesTable
@@ -34,10 +40,10 @@ export interface TestCategoriesTable {
 export interface ProjectsTable {
   id: Generated<string>; // UUID
   name: string;
-  project_code: ColumnType<string, string, never> ; // Unique project code
+  project_code: ColumnType<string, string, never>; // Unique project code
   description: string | null;
   created_at: ColumnType<Date, Date, never>;
-  updated_at: ColumnType<Date, Date, never>
+  updated_at: ColumnType<Date, Date, never>;
   last_project_code_number: number; // To track the last used number for project code generation
 }
 

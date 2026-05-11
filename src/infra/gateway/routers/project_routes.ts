@@ -4,9 +4,9 @@ import { withValidation } from '../middleware/validation_middleware.ts';
 import type { RouteDefinition } from './routing_types.ts';
 
 export const projectRoutes: RouteDefinition[] = [
-    {
-        method: "POST",
-        path: "/testProject",
-        handler: withValidation(TestProjectInputSchema, (req) => req.body, createProjectHandler)
-    }
-]
+  {
+    method: 'POST',
+    path: '/testProject',
+    handler: withValidation(TestProjectInputSchema, (req) => req.body, createProjectHandler),
+  },
+];

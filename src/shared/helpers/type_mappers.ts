@@ -1,6 +1,6 @@
 import type { KyselyATestCase, TestCase, TestProject } from '@ipinstaq/shared/types/types.ts';
 
-export function toTestCase(row: KyselyATestCase ): TestCase {
+export function toTestCase(row: KyselyATestCase): TestCase {
   return {
     id: row.id,
     title: row.title,
@@ -13,7 +13,7 @@ export function toTestCase(row: KyselyATestCase ): TestCase {
     version: row.version,
     projectId: row.project_id,
     suiteId: row.suite_id,
-    categoryId: row.category_id
+    categoryId: row.category_id,
   };
 }
 

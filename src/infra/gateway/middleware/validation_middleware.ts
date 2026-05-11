@@ -17,18 +17,16 @@ export interface AppRequest<T = unknown> {
 
 export type ValidatedRequest = z.infer<typeof RequestValidationSchema>;
 
-
-function validate<T extends z.ZodType>( schema: T, select: (req: ValidatedRequest) => unknown) {
-  
-  return async function ( appreq: AppRequest<unknown>, next: () => Promise<Response>) {
-
-    console.log("Validating request...", appreq.req.method, appreq.req.url);
+function validate<T extends z.ZodType>(schema: T, select: (req: ValidatedRequest) => unknown) {
+  return async function (appreq: AppRequest<unknown>, next: () => Promise<Response>) {
+    console.log('Validating request...', appreq.req.method, appreq.req.url);
     const url = new URL(appreq.req.url);
 
     //Normalize input for validation
     const input: ValidatedRequest = {
-      body: appreq.req.headers.get("content-type")?.includes("application/json")
-        ? await appreq.req.json() : undefined,
+      body: appreq.req.headers.get('content-type')?.includes('application/json')
+        ? await appreq.req.json()
+        : undefined,
 
       params: appreq.params,
       query: Object.fromEntries(url.searchParams),
@@ -38,24 +36,24 @@ function validate<T extends z.ZodType>( schema: T, select: (req: ValidatedReques
     const contractResult = RequestValidationSchema.safeParse(input);
     if (!contractResult.success) {
       // This should NEVER happen unless middleware is broken
-      throw new Error("Invalid validation contract");
+      throw new Error('Invalid validation contract');
     }
 
     // 🎯 ACTUAL VALIDATION
     const selected = select(contractResult.data);
-    console.log("Validated Request:", selected);
+    console.log('Validated Request:', selected);
     const result = schema.safeParse(selected);
-    console.log("Validation result:", result);
+    console.log('Validation result:', result);
 
     if (!result.success) {
-      const messages = result.error.issues.map(issue => {
+      const messages = result.error.issues.map((issue) => {
         if (issue.path.length > 0) {
-          return `${issue.path.join(".")}: ${issue.message}`;
+          return `${issue.path.join('.')}: ${issue.message}`;
         }
         return issue.message;
       });
-      console.log("Validation errors:", messages);
-      throw new ValidationError(messages.join("\n"))
+      console.log('Validation errors:', messages);
+      throw new ValidationError(messages.join(' -- '));
     }
 
     appreq.validated = result.data;
@@ -64,20 +62,20 @@ function validate<T extends z.ZodType>( schema: T, select: (req: ValidatedReques
 }
 
 export function withValidation<T>(
-  schema: z.ZodType<T>, 
-  select: (req: ValidatedRequest) => unknown, 
-  handler: AppHandler<T>): RouteHandler {
-
-  return async ({deps, req}): Promise<Response> => {
+  schema: z.ZodType<T>,
+  select: (req: ValidatedRequest) => unknown,
+  handler: AppHandler<T>,
+): RouteHandler {
+  return async ({ deps, req }): Promise<Response> => {
     return await validate(schema, select)(req, async () => {
-      const validatedReq = req as AppRequest<T>
+      const validatedReq = req as AppRequest<T>;
       return await handler(validatedReq, deps);
     });
-  }
+  };
 }
 
 export function withoutValidation<T>(handler: AppHandler<unknown>): RouteHandler {
-  return ({deps, req}): Promise<Response> => {
-    return handler(req, deps)
-  }
+  return ({ deps, req }): Promise<Response> => {
+    return handler(req, deps);
+  };
 }

@@ -17,15 +17,14 @@ class AppError extends Error {
 
 class ValidationError extends AppError {
   constructor(error: string) {
-    console.log("Validation Error ***********************")
+    console.log('Validation Error ***********************');
     super('Invalid input data', 400, error);
   }
-
 }
 
 class DuplicateError extends AppError {
-  constructor(data = "Item" ) {
-    super(`${data} already exists`, 409)
+  constructor(data = 'Item') {
+    super(`${data} already exists`, 409);
   }
 }
 
@@ -73,10 +72,10 @@ class InternalServerError extends AppError {
 export {
   AppError,
   DatabaseError,
+  DuplicateError,
   ForbiddenError,
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
   ValidationError,
-  DuplicateError
 };

@@ -1,9 +1,16 @@
 import type { ProjectsTable, TestCasesTable } from '@ipinstaq/infra/persistence/db_schema.ts';
 import type { Insertable, Selectable, Updateable } from 'kysely';
 import type z from 'zod';
-import type { TestCaseSchema, CreateTestCaseSchema, TestCaseStatusSchema } from '@ipinstaq/core/schema/test_case.ts';
+import type {
+  CreateTestCaseSchema,
+  TestCaseSchema,
+  TestCaseStatusSchema,
+} from '@ipinstaq/core/schema/test_case.ts';
 import type { TestSuiteSchema } from '@ipinstaq/core/schema/test_suite.ts';
-import type { TestProjectSchema, TestProjectInputSchema } from '@ipinstaq/core/schema/test_project.ts';
+import type {
+  TestProjectInputSchema,
+  TestProjectSchema,
+} from '@ipinstaq/core/schema/test_project.ts';
 
 export type KyselyNewTestCase = Insertable<TestCasesTable>;
 export type KyselyATestCase = Selectable<TestCasesTable>;
@@ -12,7 +19,7 @@ export type KyselyUpdateTestCase = Updateable<TestCasesTable>;
 export type TestCase = z.infer<typeof TestCaseSchema>;
 export type CreateTestCaseInput = z.infer<typeof CreateTestCaseSchema>;
 export type TestCaseStatus = z.infer<typeof TestCaseStatusSchema>;
-export type UpdateTestCaseInput =  Partial<CreateTestCaseInput> & { id: string };
+export type UpdateTestCaseInput = Partial<CreateTestCaseInput> & { id: string };
 
 export type TestSuite = z.infer<typeof TestSuiteSchema>;
 export type TestSuiteInput = Omit<TestSuite, 'id' | 'createdAt' | 'updatedAt'>;

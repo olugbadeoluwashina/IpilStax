@@ -20,7 +20,7 @@ Deno.test('Router: validate router returns 404 when method is not allowed', asyn
 });
 
 Deno.test('Router: validate router returns 200 when route is found', async () => {
-  const req = new Request('http://localhost:8000/testCases', { method: 'GET' });
+  const req = new Request('http://localhost:8000/testcases', { method: 'GET' });
   const deps = new AppDepsBuilder().build();
 
   const res = await errorMiddleware(req, () => router(req, deps));
@@ -29,7 +29,7 @@ Deno.test('Router: validate router returns 200 when route is found', async () =>
 });
 
 Deno.test('Router: validate router returns 400 when validation fails', async () => {
-  const req = new Request('http://localhost:8000/testCases/invalid-uuid', { method: 'GET' });
+  const req = new Request('http://localhost:8000/testcases/invalid-uuid', { method: 'GET' });
   const deps = new AppDepsBuilder().build();
 
   const res = await errorMiddleware(req, () => router(req, deps));
@@ -37,7 +37,9 @@ Deno.test('Router: validate router returns 400 when validation fails', async () 
 });
 
 Deno.test('Router: /testCases/:id returns 404 when test case not found', async () => {
-  const req = new Request('http://localhost:8000/testCases/123e4567-e89b-12d3-a456-426614174000', { method: 'GET' });
+  const req = new Request('http://localhost:8000/testCases/123e4567-e89b-12d3-a456-426614174000', {
+    method: 'GET',
+  });
   const deps = new AppDepsBuilder().build();
 
   const res = await errorMiddleware(req, () => router(req, deps));
