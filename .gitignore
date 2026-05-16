@@ -4,6 +4,8 @@
 /.deno
 /coverage
 /deno.lock
+node_modules
+/skills-lock.json
 
 # --------------------
 # Environment variables
@@ -53,3 +55,11 @@ postgres-data/
 .postman/
 .http
 *.rest
+
+# --------------------
+# VITE 
+# --------------------
+.vite
+dist/
+dist-ssr/
+*.local

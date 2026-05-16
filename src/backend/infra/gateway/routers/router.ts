@@ -3,13 +3,25 @@ import { routes } from './routes.ts';
 import { NotFoundError } from '@ipinstaq/shared/errors.ts';
 import type { AppRequest } from '../middleware/validation_middleware.ts';
 import { unknown } from 'zod';
+import { serveStatic } from '@ipinstaq/shared/utils/serveStaticFiles.ts';
+
+const API_PREFIX = '/api';
 
 async function router(req: Request, deps: AppDependencies): Promise<Response> {
   const url = new URL(req.url);
+  let pathname = url.pathname;
+
+  if (!pathname.startsWith(API_PREFIX)) {
+    return await serveStatic(req)
+  }
+
+  pathname = pathname.slice(API_PREFIX.length);
+
+  if (!pathname) pathname = '/';
 
   const route = routes.find((route) => {
     if (route.method !== req.method) return false;
-    const params = matchPath(route.path, url.pathname);
+    const params = matchPath(route.path, pathname);
     return params !== null;
   });
 
@@ -17,7 +29,7 @@ async function router(req: Request, deps: AppDependencies): Promise<Response> {
     throw new NotFoundError(`No route found for ${req.method} ${url.pathname}`);
   }
 
-  const params = matchPath(route.path, url.pathname)!;
+  const params = matchPath(route.path, pathname)!;
 
   const appRequest: AppRequest<unknown> = {
     req, // The actual Request object

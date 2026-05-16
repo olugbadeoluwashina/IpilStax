@@ -1,18 +1,32 @@
 {
-  "name": "@ipinstaq/backend",
+  "name": "@ipilstax/server",
   "version": "0.1.0",
-  "exports": "./main.ts",
+  "exports": "./src/backend/main.ts",
   "tasks": {
+    "dev:frontend": "cd src/frontend && deno run -A npm:vite ",
     "db:migrate": "deno run --allow-all --env-file=.env src/infra/persistence/migrate.ts",
     "migrate:down": "deno run --allow-all --env-file=.env src/infra/persistence/migrate.ts down",
     "pre-flight": "deno test && deno task db:migrate",
-    "dev": "deno run --allow-all --watch --env main.ts"
+    "dev:backend": "deno run --allow-all --watch --env src/backend/main.ts",
+    "build": "cd src/frontend && deno run -A npm:vite build"
   },
+
+  "nodeModulesDir": "auto",
+
   "imports": {
     "@db/postgres": "jsr:@db/postgres@^0.19.5",
+    "@std/http": "jsr:@std/http@^1.1.0",
+    "deno/vite-plugin": "npm:@deno/vite-plugin@^2.0.2",
+
     "@ipinstaq/core/": "./src/backend/core/",
     "@ipinstaq/infra/": "./src/backend/infra/",
     "@ipinstaq/shared/": "./src/backend/shared/",
+
+    "@types/react": "npm:@types/react@^19.2.14",
+    "vitejs/plugin-react": "npm:@vitejs/plugin-react@^6.0.2",
+    "react": "npm:react@^19.0.0",
+    "react-dom": "npm:react-dom@^19.0.0",
+    "vite": "npm:vite@^8.0.0",
 
     "kysely": "npm:kysely@^0.28.10",
     "pg": "npm:pg@^8.17.1",
@@ -23,6 +37,13 @@
     "@std/expect": "jsr:@std/expect",
     "@std/path": "jsr:@std/path",
     "@std/testing": "jsr:@std/testing"
+  },
+
+  "compilerOptions": {
+    "types": ["react","react-dom","@types/react"],
+    "lib": ["dom", "dom.iterable", "deno.ns"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   },
 
   "lint": {

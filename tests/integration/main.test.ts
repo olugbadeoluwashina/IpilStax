@@ -1,5 +1,5 @@
 import { errorMiddleware } from '@ipinstaq/infra/gateway/middleware/error_middleware.ts';
-import { AppDepsBuilder, TestDepsBuilder } from '../builder/apps_deps.builder.ts';
+import { AppDepsBuilder } from '../builder/apps_deps.builder.ts';
 import router from '@ipinstaq/infra/gateway/routers/router.ts';
 import { expect } from '@std/expect/expect';
 
@@ -12,7 +12,7 @@ Deno.test('Router: validate router returns 404 when route is not found', async (
 });
 
 Deno.test('Router: validate router returns 404 when method is not allowed', async () => {
-  const req = new Request('http://localhost:8000/testCases/123', { method: 'POST' });
+  const req = new Request('http://localhost:8000/api/testcases/123', { method: 'POST' });
   const deps = new AppDepsBuilder().build();
 
   const res = await errorMiddleware(req, () => router(req, deps));

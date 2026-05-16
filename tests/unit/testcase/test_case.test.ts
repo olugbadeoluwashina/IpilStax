@@ -93,14 +93,14 @@ Deno.test('CreateTestCaseUseCase: should update project sequence successfully wh
 
 Deno.test('CreateTestCaseUseCase: should generate test case id for different projects successfully', async () => {
   const mockrepo = fakeTestCaseRepo();
-  mockrepo.getProjectCodeAndSequence = async (projectId: string) => {
+  mockrepo.getProjectCodeAndSequence = (projectId: string) => {
     if (projectId === 'project-a') {
-      return { projectCode: 'PROJA', sequence: 0 };
+      return Promise.resolve({ projectCode: 'PROJA', sequence: 0 });
     }
     if (projectId === 'project-b') {
-      return { projectCode: 'PROJB', sequence: 5 };
+      return Promise.resolve({ projectCode: 'PROJB', sequence: 5 });
     }
-    return { projectCode: 'OTHER', sequence: 0 };
+    return Promise.resolve({ projectCode: 'OTHER', sequence: 0 });
   };
 
   const useCase = new CreateTestCaseUC(mockrepo);

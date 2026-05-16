@@ -46,11 +46,11 @@ function validate<T extends z.ZodType>(schema: T, select: (req: ValidatedRequest
     console.log('Validation result:', result);
 
     if (!result.success) {
-      const messages = result.error.issues.map((issue) => {
-        if (issue.path.length > 0) {
-          return `${issue.path.join('.')}: ${issue.message}`;
+      const messages = result.error.issues.map(({ path, message }) => {
+        if (path.length > 0) {
+          return `${path.join('.')}: ${message}`;
         }
-        return issue.message;
+        return message;
       });
       console.log('Validation errors:', messages);
       throw new ValidationError(messages.join(' -- '));
