@@ -7,7 +7,7 @@ import { GetTestCaseUC } from '@ipinstaq/core/logic/test_case/get_test_case.ts';
 import { ListAllTestCaseUC } from '@ipinstaq/core/logic/test_case/list_all_test_case.ts';
 import { EditTestCaseUC } from '@ipinstaq/core/logic/test_case/edit_test_case.ts';
 
-Deno.test('CreateTestCaseUseCase: should successfully create a new test case', async () => {
+Deno.test('CreateTestCaseUseCase: should successfully be able to create one new test case', async () => {
   // 1. Setup (Arrange)
   const useCase = new CreateTestCaseUC(fakeTestCaseRepo());
 
@@ -26,6 +26,30 @@ Deno.test('CreateTestCaseUseCase: should successfully create a new test case', a
   assertExists(result.id); // Check that a UUID was generated
   assertEquals(result.version, 1);
 });
+
+Deno.test('CreateTestCaseUseCase: should be able to create multiple test cases at once', async () => {
+  const useCase = new CreateTestCaseUC(fakeTestCaseRepo());
+
+  const inputData = [
+    {
+      title: 'Verify User Login',
+      description: '1. Enter credentials, 2. Click login',
+      status: 'draft' as const,
+      projectId: 'project-id',
+    }, 
+    {
+      title: 'Second test case',
+      description: 'Make it a case for this',
+      status: 'draft' as const,
+      projectId: 'project-id',
+    }]
+
+    const result = await useCase.execute(inputData);
+
+    assertExists(result.id);
+    expect(result.title).toEqual(inputData[0].title)
+    
+})
 
 Deno.test('CreateTestCaseUseCase: should generate test case id successfully', async () => {
   const mockrepo = fakeTestCaseRepo();
@@ -86,6 +110,19 @@ Deno.test('CreateTestCaseUseCase: should generate test case id for different pro
   expect(testCaseA.testCaseId).toBe('PROJA-1');
   expect(testCaseB.testCaseId).toBe('PROJB-6');
 });
+
+Deno.test('CreateTestCaseUseCase: should return an empty array instantly if input batch is empty', async () => {
+  const mockrepo = fakeTestCaseRepo();
+  const spied = spy(mockrepo, 'getProjectCodeAndSequence');
+  const useCase = new CreateTestCaseUC(mockrepo);
+
+  const result = await useCase.execute([]);
+
+  expect(result).toEqual([]);
+  assertSpyCalls(spied, 0); // Proves the database wasn't touched unnecessarily
+});
+
+/** ************** */
 
 Deno.test('GetTestCaseUseCase: should get test case by id after creation', async (test) => {
   const repo = fakeTestCaseRepo();

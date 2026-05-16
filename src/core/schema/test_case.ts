@@ -23,7 +23,7 @@ const BaseTestCaseSchema = z.object({
 });
 
 export const BatchTestCaseSchema = z.object({
-  data: z.array(BaseTestCaseSchema),
+  data: z.array(BaseTestCaseSchema).min(1, 'At least one test case is required'),
 });
 
 

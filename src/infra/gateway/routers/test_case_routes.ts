@@ -28,9 +28,7 @@ export const testcaseRoutes: RouteDefinition[] = [
   {
     method: 'PATCH',
     path: '/testcases/:id',
-    handler: withValidation(
-      TestCaseSchema.partial(),
-      (req) => ({ id: req.params?.id, ...req.body }),
+    handler: withValidation( TestCaseSchema.partial(), (req) => ({ id: req.params?.id, ...req.body }), 
       editTestCaseHandler,
     ),
   },
