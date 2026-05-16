@@ -10,9 +10,9 @@
   },
   "imports": {
     "@db/postgres": "jsr:@db/postgres@^0.19.5",
-    "@ipinstaq/core/": "./src/core/",
-    "@ipinstaq/infra/": "./src/infra/",
-    "@ipinstaq/shared/": "./src/shared/",
+    "@ipinstaq/core/": "./src/backend/core/",
+    "@ipinstaq/infra/": "./src/backend/infra/",
+    "@ipinstaq/shared/": "./src/backend/shared/",
 
     "kysely": "npm:kysely@^0.28.10",
     "pg": "npm:pg@^8.17.1",
